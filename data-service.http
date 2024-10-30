@@ -1,0 +1,7 @@
+@DataService=localhost:9090
+
+### DataService Service health
+GRPC {{DataService}}/grpc.health.v1.Health/Check
+
+### Get all jobs
+GRPC {{DataService}}/DataService/getAllJobs

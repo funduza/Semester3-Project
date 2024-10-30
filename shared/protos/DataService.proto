@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "sep3.project.data.grpc";
+
+service DataService {
+  rpc getAllJobs(GetAllJobsRequest) returns (GetAllJobsResponse);
+}
+
+message GetAllJobsRequest {
+  //
+}
+
+message GetAllJobsResponse {
+  message Job {
+    int64 id = 1;
+    string title = 2;
+  }
+
+  repeated Job jobs = 1;
+}

@@ -31,3 +31,10 @@
 /Users/lucia/IdeaProjects/SEP3-Project/services/web/obj/Debug/net8.0/web.pdb
 /Users/lucia/IdeaProjects/SEP3-Project/services/web/obj/Debug/net8.0/web.genruntimeconfig.cache
 /Users/lucia/IdeaProjects/SEP3-Project/services/web/obj/Debug/net8.0/ref/web.dll
+/Users/lucia/IdeaProjects/SEP3-Project/services/web/bin/Debug/net8.0/Google.Protobuf.dll
+/Users/lucia/IdeaProjects/SEP3-Project/services/web/bin/Debug/net8.0/Grpc.AspNetCore.Server.dll
+/Users/lucia/IdeaProjects/SEP3-Project/services/web/bin/Debug/net8.0/Grpc.AspNetCore.Server.ClientFactory.dll
+/Users/lucia/IdeaProjects/SEP3-Project/services/web/bin/Debug/net8.0/Grpc.Core.Api.dll
+/Users/lucia/IdeaProjects/SEP3-Project/services/web/bin/Debug/net8.0/Grpc.Net.Client.dll
+/Users/lucia/IdeaProjects/SEP3-Project/services/web/bin/Debug/net8.0/Grpc.Net.ClientFactory.dll
+/Users/lucia/IdeaProjects/SEP3-Project/services/web/bin/Debug/net8.0/Grpc.Net.Common.dll

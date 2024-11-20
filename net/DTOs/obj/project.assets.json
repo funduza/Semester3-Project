@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj",
+      "projectUniqueName": "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj",
       "projectName": "DTOs",
-      "projectPath": "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj",
+      "projectPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj",
       "packagesPath": "/Users/lucia/.nuget/packages/",
-      "outputPath": "/Users/lucia/RiderProjects/net/DTOs/obj/",
+      "outputPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/obj/",
       "projectStyle": "PackageReference",
       "UsingMicrosoftNETSdk": false,
       "configFilePaths": [

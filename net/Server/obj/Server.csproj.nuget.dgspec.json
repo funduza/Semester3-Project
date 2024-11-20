@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/lucia/RiderProjects/net/Server/Server.csproj": {}
+    "/Users/lucia/IdeaProjects/SEP3-Project/net/Server/Server.csproj": {}
   },
   "projects": {
-    "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj": {
+    "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj",
+        "projectUniqueName": "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj",
         "projectName": "DTOs",
-        "projectPath": "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj",
+        "projectPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj",
         "packagesPath": "/Users/lucia/.nuget/packages/",
-        "outputPath": "/Users/lucia/RiderProjects/net/DTOs/obj/",
+        "outputPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/obj/",
         "projectStyle": "PackageReference",
         "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
@@ -63,14 +63,14 @@
         }
       }
     },
-    "/Users/lucia/RiderProjects/net/Server/Server.csproj": {
+    "/Users/lucia/IdeaProjects/SEP3-Project/net/Server/Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/lucia/RiderProjects/net/Server/Server.csproj",
+        "projectUniqueName": "/Users/lucia/IdeaProjects/SEP3-Project/net/Server/Server.csproj",
         "projectName": "Server",
-        "projectPath": "/Users/lucia/RiderProjects/net/Server/Server.csproj",
+        "projectPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/Server/Server.csproj",
         "packagesPath": "/Users/lucia/.nuget/packages/",
-        "outputPath": "/Users/lucia/RiderProjects/net/Server/obj/",
+        "outputPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/Server/obj/",
         "projectStyle": "PackageReference",
         "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
@@ -86,8 +86,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj": {
-                "projectPath": "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj"
+              "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj": {
+                "projectPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj"
               }
             }
           }
@@ -107,6 +107,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.66.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"

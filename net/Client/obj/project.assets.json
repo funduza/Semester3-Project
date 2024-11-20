@@ -32,11 +32,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/lucia/RiderProjects/net/Client/Client.csproj",
+      "projectUniqueName": "/Users/lucia/IdeaProjects/SEP3-Project/net/Client/Client.csproj",
       "projectName": "Client",
-      "projectPath": "/Users/lucia/RiderProjects/net/Client/Client.csproj",
+      "projectPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/Client/Client.csproj",
       "packagesPath": "/Users/lucia/.nuget/packages/",
-      "outputPath": "/Users/lucia/RiderProjects/net/Client/obj/",
+      "outputPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/Client/obj/",
       "projectStyle": "PackageReference",
       "UsingMicrosoftNETSdk": false,
       "configFilePaths": [
@@ -52,8 +52,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj": {
-              "projectPath": "/Users/lucia/RiderProjects/net/DTOs/DTOs.csproj"
+            "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj": {
+              "projectPath": "/Users/lucia/IdeaProjects/SEP3-Project/net/DTOs/DTOs.csproj"
             }
           }
         }

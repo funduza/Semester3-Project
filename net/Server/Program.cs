@@ -1,7 +1,9 @@
+using Server.Grpc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddGrpcClient<Data.DataClient>(sp => sp.Address = new Uri("http://localhost:9090"));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -1,10 +1,8 @@
 syntax = "proto3";
 
-package DataService;
-
 option java_multiple_files = true;
 option java_package = "sep3.project.data.grpc";
-option csharp_namespace = "web";
+option csharp_namespace = "Server.Grpc";
 
 service Data {
   rpc getAllJobs(GetAllJobsRequest) returns (GetAllJobsResponse);

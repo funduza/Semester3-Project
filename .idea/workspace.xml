@@ -66,7 +66,7 @@
     "RequestMappingsPanelWidth1": "75",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.DataServiceApplication.executor": "Run",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "alex/net-grpc-client",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -152,7 +152,23 @@
       <option name="project" value="LOCAL" />
       <updated>1732105928332</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add separate dir for .net">
+      <option name="closed" value="true" />
+      <created>1732107798179</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1732107798179</updated>
+    </task>
+    <task id="LOCAL-00005" summary="rename service to java">
+      <option name="closed" value="true" />
+      <created>1732107952976</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1732107952976</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,6 +192,8 @@
     <MESSAGE value="add .net web api" />
     <MESSAGE value="update entity and test the service" />
     <MESSAGE value="Merge branch 'main' into JobEntity-and-repository&#10;&#10;# Conflicts:&#10;#&#9;services/data/src/main/java/sep3/project/data/grpc/DataServiceImpl.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'main' into JobEntity-and-repository&#10;&#10;# Conflicts:&#10;#&#9;services/data/src/main/java/sep3/project/data/grpc/DataServiceImpl.java" />
+    <MESSAGE value="add separate dir for .net" />
+    <MESSAGE value="rename service to java" />
+    <option name="LAST_COMMIT_MESSAGE" value="rename service to java" />
   </component>
 </project>

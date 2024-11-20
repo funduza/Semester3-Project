@@ -20,7 +20,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="add-web-api" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -37,6 +37,9 @@
     &quot;accountId&quot;: &quot;5a5fada2-3585-4f62-b49e-84f8872bd7bd&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -48,35 +51,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP Request.data-service | DataService Service health.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.data-service | Get all jobs.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.data [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.data [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.data [install].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DataServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP Request.data-service | DataService Service health (1).executor": "Run",
+    "HTTP Request.data-service | DataService Service health.executor": "Run",
+    "HTTP Request.data-service | Get all jobs (1).executor": "Run",
+    "HTTP Request.data-service | Get all jobs.executor": "Run",
+    "Maven.data [clean].executor": "Run",
+    "Maven.data [compile].executor": "Run",
+    "Maven.data [install].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.DataServiceApplication.executor": "Run",
+    "git-widget-placeholder": "#1 on JobEntity-and-repository",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ],
-    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
-      &quot;repository&quot;
+    "GitStage.ChangesTree.GroupingKeys": [
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Spring Boot.DataServiceApplication">
+    <configuration name="data-service | DataService Service health (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" executionIdentifier="DataService Service health" runType="Run single request">
+      <method v="2" />
+    </configuration>
     <configuration name="data-service | DataService Service health" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="data-service | Get all jobs (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" executionIdentifier="Get all jobs" index="2" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="data-service | Get all jobs" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" index="2" runType="Run single request">
@@ -91,10 +102,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.data-service | Get all jobs (1)" />
+        <item itemvalue="HTTP Request.data-service | DataService Service health (1)" />
         <item itemvalue="HTTP Request.data-service | Get all jobs" />
         <item itemvalue="HTTP Request.data-service | DataService Service health" />
         <item itemvalue="HTTP Request.data-service | Get all jobs" />
-        <item itemvalue="HTTP Request.data-service | DataService Service health" />
       </list>
     </recent_temporary>
   </component>
@@ -124,7 +136,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732104820513</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Merge branch 'main' into JobEntity-and-repository&#10;&#10;# Conflicts:&#10;#&#9;services/data/src/main/java/sep3/project/data/grpc/DataServiceImpl.java">
+      <option name="closed" value="true" />
+      <created>1732105928332</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1732105928332</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,6 +163,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add .net web api" />
-    <option name="LAST_COMMIT_MESSAGE" value="add .net web api" />
+    <MESSAGE value="update entity and test the service" />
+    <MESSAGE value="Merge branch 'main' into JobEntity-and-repository&#10;&#10;# Conflicts:&#10;#&#9;services/data/src/main/java/sep3/project/data/grpc/DataServiceImpl.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'main' into JobEntity-and-repository&#10;&#10;# Conflicts:&#10;#&#9;services/data/src/main/java/sep3/project/data/grpc/DataServiceImpl.java" />
   </component>
 </project>

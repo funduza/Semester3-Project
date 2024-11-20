@@ -20,26 +20,26 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="POC1" />
+        <entry key="$PROJECT_DIR$" value="search-service" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "PawsitiveCoder"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;PawsitiveCoder&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/PawsitiveCoder/SEP3-Project.git",
-    "accountId": "5a5fada2-3585-4f62-b49e-84f8872bd7bd"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/PawsitiveCoder/SEP3-Project.git&quot;,
+    &quot;accountId&quot;: &quot;5a5fada2-3585-4f62-b49e-84f8872bd7bd&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2o9X6z1epThyPSJDJG0Ab6aymYo" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Remove" />
@@ -50,7 +50,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "HTTP Request.data-service | DataService Service health (1).executor": "Run",
     "HTTP Request.data-service | DataService Service health.executor": "Run",
+    "HTTP Request.data-service | Get all jobs (1).executor": "Run",
     "HTTP Request.data-service | Get all jobs.executor": "Run",
     "Maven.data [clean].executor": "Run",
     "Maven.data [compile].executor": "Run",
@@ -61,7 +63,7 @@
     "RequestMappingsPanelWidth1": "75",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.DataServiceApplication.executor": "Run",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "#1 on JobEntity-and-repository",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)"
@@ -76,17 +78,16 @@
   }
 }]]></component>
   <component name="RunManager" selected="Spring Boot.DataServiceApplication">
-    <configuration name="DataServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="sep3.project.data.DataServiceApplication" />
-      <module name="data" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="data-service | DataService Service health" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" requestIdentifier="DataService Service health" runType="Run single request">
+    <configuration name="data-service | DataService Service health (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" executionIdentifier="DataService Service health" runType="Run single request">
       <method v="2" />
     </configuration>
-    <configuration name="data-service | Get all jobs" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" index="2" requestIdentifier="Get all jobs" runType="Run single request">
+    <configuration name="data-service | DataService Service health" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="data-service | Get all jobs (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" executionIdentifier="Get all jobs" index="2" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="data-service | Get all jobs" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" index="2" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="DataServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
@@ -98,9 +99,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.data-service | Get all jobs (1)" />
+        <item itemvalue="HTTP Request.data-service | DataService Service health (1)" />
         <item itemvalue="HTTP Request.data-service | Get all jobs" />
         <item itemvalue="HTTP Request.data-service | DataService Service health" />
-        <item itemvalue="Application.DataServiceApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -141,6 +143,17 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add .net web api" />
-    <option name="LAST_COMMIT_MESSAGE" value="add .net web api" />
+    <MESSAGE value="proto def" />
+    <option name="LAST_COMMIT_MESSAGE" value="proto def" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="org.hibernate.exception.JDBCConnectionException" package="org.hibernate.exception" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

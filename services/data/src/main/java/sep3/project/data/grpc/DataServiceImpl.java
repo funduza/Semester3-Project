@@ -22,15 +22,19 @@ public class DataServiceImpl extends DataGrpc.DataImplBase {
         log.info("GetAllJobsRequest: {}", request);
 
         List<Job> jobs = jobRepository.findAll();
-        Iterable<GetAllJobsResponse.Job> jobMessages = jobs.stream()
+
+        List<GetAllJobsResponse.Job> jobMessages = jobs.stream()
                 .map(job -> GetAllJobsResponse.Job.newBuilder()
                         .setId(job.getId()).
-                        setTitle(job.getTitle()).build()).toList();
+                        setTitle(job.getTitle())
+                        .build())
+                .toList();
 
         GetAllJobsResponse response = GetAllJobsResponse
                 .newBuilder()
                 .addAllJobs(jobMessages)
                 .build();
+
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

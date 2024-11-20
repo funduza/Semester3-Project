@@ -16,14 +16,15 @@ public class JobsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IResult> GetAllJobs()
+    public async Task<ActionResult<IEnumerable<JobDto>>> GetJobs()
     {
-        var getAllJobsResponse = await _dataClient.getAllJobsAsync(new GetAllJobsRequest());
-        var jobDtos = getAllJobsResponse.Jobs.Select(job => new JobDto()
+        var response = await _dataClient.getAllJobsAsync(new GetAllJobsRequest());
+        var jobsDto = response.Jobs.Select(job => new JobDto()
         {
             Id = job.Id,
             Title = job.Title,
         });
-        return Results.Ok(jobDtos);
+        
+        return Ok(jobsDto);
     }
 }

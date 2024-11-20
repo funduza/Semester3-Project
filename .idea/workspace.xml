@@ -20,7 +20,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="search-service" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -44,7 +44,7 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2o9X6z1epThyPSJDJG0Ab6aymYo" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Remove" />
   </component>
   <component name="ProjectViewState">
@@ -66,10 +66,11 @@
     "RequestMappingsPanelWidth1": "75",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.DataServiceApplication.executor": "Run",
-    "git-widget-placeholder": "#1 on JobEntity-and-repository",
+    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)"
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -81,6 +82,13 @@
   }
 }]]></component>
   <component name="RunManager" selected="Spring Boot.DataServiceApplication">
+    <configuration name="DataServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sep3.project.data.DataServiceApplication" />
+      <module name="data" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="data-service | DataService Service health (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/data-service.http" executionIdentifier="DataService Service health" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -103,10 +111,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="HTTP Request.data-service | Get all jobs (1)" />
+        <item itemvalue="HTTP Request.data-service | Get all jobs" />
         <item itemvalue="HTTP Request.data-service | DataService Service health (1)" />
-        <item itemvalue="HTTP Request.data-service | Get all jobs" />
         <item itemvalue="HTTP Request.data-service | DataService Service health" />
-        <item itemvalue="HTTP Request.data-service | Get all jobs" />
+        <item itemvalue="Application.DataServiceApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -162,6 +170,9 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/net" />
+    </ignored-roots>
     <MESSAGE value="add .net web api" />
     <MESSAGE value="update entity and test the service" />
     <MESSAGE value="Merge branch 'main' into JobEntity-and-repository&#10;&#10;# Conflicts:&#10;#&#9;services/data/src/main/java/sep3/project/data/grpc/DataServiceImpl.java" />

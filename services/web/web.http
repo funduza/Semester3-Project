@@ -1,0 +1,8 @@
+@web_HostAddress = localhost:5007
+@DataService = localhost:5074
+
+GRPC {{DataService}}/Data/getAllJobs
+
+###
+
+GRPC {{web_HostAddress}}/DataService/getAllJobs

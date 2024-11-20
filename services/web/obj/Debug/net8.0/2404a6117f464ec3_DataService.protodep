@@ -1,0 +1,2 @@
+obj/Debug/net8.0/DataService.cs \
+obj/Debug/net8.0/DataServiceGrpc.cs: ../../shared/protos/DataService.proto

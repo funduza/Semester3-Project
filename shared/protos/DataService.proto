@@ -16,6 +16,11 @@ message GetAllJobsResponse {
   message Job {
     int64 id = 1;
     string title = 2;
+    string description = 3;
+    double salary = 4;
+    string type = 5;
+    string deadline = 6; 
+    string location = 7; 
   }
 
   repeated Job jobs = 1;

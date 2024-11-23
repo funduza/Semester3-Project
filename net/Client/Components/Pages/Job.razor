@@ -10,6 +10,7 @@
 
 See the job list.
 
+
 @if (!string.IsNullOrEmpty(error))
    {
        <div class="alert alert-danger">@error</div>
@@ -18,17 +19,25 @@ else if (jobs == null)
 {
     <p>Loading...</p>
 }else
-{
-    <div class="row row-cols-5 gap-3">
+{ 
+    <div class="d-grid gap-3">
         @foreach (var job in jobs)
         {
-            <div class="col card">
-                <div class="card-body">
-                    <h3 class="card-title">@job.Title</h3>
-                    @*  <p class="card-body">@job.Desciption</p>
-                    <p>@job.Salary</p>
-                    <p>@job.Deadline</p>
-                    <p>@job.Status</p> *@
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">@job.Title</h3>
+                        <p class="card-text">@job.Description</p>
+                        <ul class="list-styled">
+                            <li><strong>Salary:</strong> $@job.Salary</li>
+                            <li><strong>Employment Type:</strong> @job.Type</li>
+                            <li><strong>Application Deadline:</strong> @job.Deadline</li>
+                            <li><strong>Location:</strong> @job.Location</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <p>Needed in @job.Location</p>
+                    </div>
                 </div>
             </div>
         }

@@ -23,6 +23,10 @@ public class JobsController : ControllerBase
         {
             Id = job.Id,
             Title = job.Title,
+           // Description = job.Description,
+           // Salary = job.Salary,
+            // Deadline = job.Deadline.ToDateTime().ToString(), 
+            // Status = job.Status
         });
         
         return Ok(jobsDto);

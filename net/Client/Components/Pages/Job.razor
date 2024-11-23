@@ -1,0 +1,53 @@
+﻿@page "/"
+@using Client.Components.Service
+@using DTOs
+@rendermode InteractiveServer
+@inject IJobService HttpJobService
+
+<PageTitle>Jobs</PageTitle>
+
+<h1>Hello, There!</h1>
+
+See the job list.
+
+@if (!string.IsNullOrEmpty(error))
+   {
+       <div class="alert alert-danger">@error</div>
+   }
+else if (jobs == null)
+{
+    <p>Loading...</p>
+}else
+{
+    <div class="row row-cols-5 gap-3">
+        @foreach (var job in jobs)
+        {
+            <div class="col card">
+                <div class="card-body">
+                    <h3 class="card-title">@job.Title</h3>
+                    @*  <p class="card-body">@job.Desciption</p>
+                    <p>@job.Salary</p>
+                    <p>@job.Deadline</p>
+                    <p>@job.Status</p> *@
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<JobDto>? jobs;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            jobs = await HttpJobService.GetAllJobsAsync();
+        }
+        catch (Exception e)
+        {
+            error = $"An error occurred while loading jobs: {e.Message}";
+        }
+    }
+}

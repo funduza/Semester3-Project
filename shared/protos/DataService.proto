@@ -4,19 +4,43 @@ option java_multiple_files = true;
 option java_package = "sep3.project.data.grpc";
 option csharp_namespace = "Server.Grpc";
 
-service Data {
-  rpc getAllJobs(GetAllJobsRequest) returns (GetAllJobsResponse);
+// A service operating on Job resources.
+service JobService {
+  // A method to get a list of jobs and optionally filter it.
+  rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
 }
 
-message GetAllJobsRequest {
-  //
+// A representation of a Job used in responses.
+message JobProto {
+  // The job identifier
+  int64 id = 1;
+
+  // The job title
+  string title = 2;
 }
 
-message GetAllJobsResponse {
-  message Job {
-    int64 id = 1;
-    string title = 2;
-  }
+// A request to be sent when calling the `ListJobs` method.
+message ListJobsRequest {
+  // A query to filter jobs by. Every job containing the query in
+  // the title or description will be returned.
+  string filter = 1;
 
-  repeated Job jobs = 1;
+  // The maximum number of jobs to return. The service may return fewer than this value.
+  // If unspecified, at most 12 jobs will be returned.
+  // The maximum value is 64; values above 64 will be coerced to 64.
+  int32 page_size = 2;
+
+  // A page token, received from a previous `ListJobs` call.
+  // Provide this to retrieve the subsequent page.
+  int32 page_token = 3;
+}
+
+// A response received when calling the `ListJobs` method.
+message ListJobsResponse {
+  // The list of jobs
+  repeated JobProto jobs = 1;
+
+  // A token, which can be sent as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  int32 next_page_token = 2;
 }

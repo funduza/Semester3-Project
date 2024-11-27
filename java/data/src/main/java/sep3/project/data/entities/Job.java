@@ -1,9 +1,6 @@
 package sep3.project.data.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,12 +22,14 @@ public class Job {
     private Date postingDate;
     private Date deadline;
     private String location;
+    @Enumerated(EnumType.STRING)
     private Type type;
     private Double salary;
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public enum Type {
-        PartTime, FullTime
+        PartTime, FullTime, Internship
     }
 
     public enum Status {

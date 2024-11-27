@@ -4,7 +4,7 @@ using Server.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddGrpcClient<Data.DataClient>(sp => sp.Address = new Uri("http://localhost:9090"));
+builder.Services.AddGrpcClient<JobService.JobServiceClient>(sp => sp.Address = new Uri("http://localhost:9090"));
 builder.Services.AddControllers();
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 

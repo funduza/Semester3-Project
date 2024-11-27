@@ -14,9 +14,22 @@ service JobService {
 message JobProto {
   // The job identifier
   int64 id = 1;
-
   // The job title
   string title = 2;
+  // The job description
+  string description = 3;
+  // The date when the job was posted
+  string postingDate = 4;
+  // The job deadline
+  string deadline = 5;
+  // The job location
+  string location = 6;
+  // The job type, one of PartTime, FullTime, Internship
+  string type = 7;
+  // The job salary
+  double salary = 8;
+  // The job status, one of Active, Closed
+  string status = 9;
 }
 
 // A request to be sent when calling the `ListJobs` method.

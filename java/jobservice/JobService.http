@@ -1,17 +1,17 @@
 @Host = localhost:9090
 
-### DataService Service health
+### JobService health
 GRPC {{Host}}/grpc.health.v1.Health/Check
 
-### Get all jobs
+### Get a list of all jobs
 GRPC {{Host}}/JobService/ListJobs
 
-### Search jobs "Job"
+### Get a list of jobs matching the filter
 GRPC {{Host}}/JobService/ListJobs
 Content-Type: application/json
 
 {
   "filter": "ion",
   "page_size": 2,
-  "page_token": 2
+  "page_token": 0
 }

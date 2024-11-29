@@ -1,22 +1,21 @@
-package sep3.project.data.grpc;
+package sep3.project.jobservice.grpc;
 
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import sep3.project.data.entities.Job;
-import sep3.project.data.repositories.JobRepository;
+import sep3.project.jobservice.entities.Job;
+import sep3.project.jobservice.repositories.JobRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @GrpcService
-public class DataServiceImpl extends JobServiceGrpc.JobServiceImplBase {
+public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
     private final JobRepository jobRepository;
 
-    public DataServiceImpl(JobRepository jobRepository) {
+    public JobServiceImpl(JobRepository jobRepository) {
         this.jobRepository = jobRepository;
     }
 

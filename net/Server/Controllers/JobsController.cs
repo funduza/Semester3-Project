@@ -43,12 +43,14 @@ public class JobsController : ControllerBase
             return BadRequest("search query empty");
         }
 
-        var response = await _dataClient.getSearchedJobsAsync(new GetSearchedJobsRequest { Query = query });
+        var response = await _jobServiceClient.ListJobsAsync(new ListJobsRequest() { Filter = query });
         var jobsDto = response.Jobs.Select(job => new JobDto
         {
             Id = job.Id,
             Title = job.Title,
+            PostingDate = job.PostingDate,
             Description = job.Description,
+            Status = job.Status,
             Salary = job.Salary,
             Type = job.Type,
             Deadline = job.Deadline,

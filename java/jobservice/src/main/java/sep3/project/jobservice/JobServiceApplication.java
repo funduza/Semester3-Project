@@ -1,11 +1,11 @@
-package sep3.project.data;
+package sep3.project.jobservice;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import sep3.project.data.entities.Job;
-import sep3.project.data.repositories.JobRepository;
+import sep3.project.jobservice.entities.Job;
+import sep3.project.jobservice.repositories.JobRepository;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Random;
 
 @SpringBootApplication
-public class DataServiceApplication {
+public class JobServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(DataServiceApplication.class, args);
+        SpringApplication.run(JobServiceApplication.class, args);
     }
 
     @Bean

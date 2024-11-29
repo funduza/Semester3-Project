@@ -1,4 +1,4 @@
-package sep3.project.data.grpc;
+package sep3.project.jobservice.grpc;
 
 import io.grpc.Status;
 import lombok.extern.slf4j.Slf4j;

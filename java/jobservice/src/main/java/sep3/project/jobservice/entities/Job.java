@@ -1,4 +1,4 @@
-package sep3.project.data.entities;
+package sep3.project.jobservice.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

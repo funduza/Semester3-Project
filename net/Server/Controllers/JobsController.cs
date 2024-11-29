@@ -8,27 +8,28 @@ namespace Server.Controllers;
 [Route("jobs")]
 public class JobsController : ControllerBase
 {
-    private readonly Data.DataClient _dataClient;
+    private readonly JobService.JobServiceClient _jobServiceClient;
 
-    public JobsController(Data.DataClient dataClient)
+    public JobsController(JobService.JobServiceClient jobServiceClient)
     {
-        _dataClient = dataClient;
+        _jobServiceClient = jobServiceClient;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<JobDto>>> GetJobs()
     {
-        var response = await _dataClient.getAllJobsAsync(new GetAllJobsRequest());
+        var response = await _jobServiceClient.ListJobsAsync(new ListJobsRequest());
         var jobsDto = response.Jobs.Select(job => new JobDto()
         {
             Id = job.Id,
             Title = job.Title,
             Description = job.Description, 
-            Salary = job.Salary,
-            Type = job.Type,
-            Deadline = job.Deadline, 
+            PostingDate = job.PostingDate,
+            Deadline = job.Deadline,
             Location = job.Location,
-            
+            Type = job.Type,
+            Salary = job.Salary,
+            Status = job.Status
         });
         
         return Ok(jobsDto);

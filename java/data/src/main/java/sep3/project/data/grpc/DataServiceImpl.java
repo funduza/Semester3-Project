@@ -38,13 +38,15 @@ public class DataServiceImpl extends JobServiceGrpc.JobServiceImplBase {
 
         List<JobProto> jobMessages = jobs.stream()
                 .map(job -> JobProto.newBuilder()
-                        .setId(job.getId()).
-                        setTitle(job.getTitle()).
-                        setDescription(job.getDescription()).
-                        setSalary(job.getSalary()).
-                        setType(job.getType().toString()).
-                        setDeadline(job.getDeadline().toString()).
-                        setLocation(job.getLocation())
+                        .setId(job.getId())
+                        .setTitle(job.getTitle())
+                        .setDescription(job.getDescription())
+                        .setPostingDate(job.getPostingDate().toString())
+                        .setDeadline(job.getDeadline().toString())
+                        .setLocation(job.getLocation())
+                        .setType(job.getType().toString())
+                        .setSalary(job.getSalary())
+                        .setStatus(job.getStatus().toString())
                         .build())
                 .toList();
 

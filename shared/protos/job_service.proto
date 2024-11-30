@@ -36,16 +36,16 @@ message JobProto {
 message ListJobsRequest {
   // A query to filter jobs by. Every job containing the query in
   // the title or description will be returned.
-  string filter = 1;
+  optional string filter = 1;
 
   // The maximum number of jobs to return. The service may return fewer than this value.
   // If unspecified, at most 12 jobs will be returned.
   // The maximum value is 64; values above 64 will be coerced to 64.
-  int32 page_size = 2;
+  optional int32 page_size = 2;
 
   // A page token, received from a previous `ListJobs` call.
   // Provide this to retrieve the subsequent page.
-  int32 page_token = 3;
+  optional int32 page_token = 3;
 }
 
 // A response received when calling the `ListJobs` method.

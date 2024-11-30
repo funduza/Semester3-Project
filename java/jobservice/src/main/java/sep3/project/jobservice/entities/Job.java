@@ -15,9 +15,10 @@ import java.util.Date;
 @AllArgsConstructor
 public class Job {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private Date postingDate;
     private Date deadline;

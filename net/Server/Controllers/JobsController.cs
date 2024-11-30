@@ -16,47 +16,36 @@ public class JobsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<JobDto>>> GetJobs()
+    public async Task<ActionResult<ApiResponse<IEnumerable<JobDto>>>> GetJobsAsync(
+        [FromQuery] int pageToken,
+        [FromQuery] int pageSize,
+        [FromQuery] string filter = ""
+    )
     {
-        var response = await _jobServiceClient.ListJobsAsync(new ListJobsRequest());
-        var jobsDto = response.Jobs.Select(job => new JobDto()
+        var listJobsResponse = await _jobServiceClient.ListJobsAsync(new ListJobsRequest()
+        {
+            Filter = filter,
+            PageToken = pageToken,
+            PageSize = pageSize
+        });
+
+        var jobsDto = listJobsResponse.Jobs.Select(job => new JobDto()
         {
             Id = job.Id,
             Title = job.Title,
-            Description = job.Description, 
-            PostingDate = job.PostingDate,
-            Deadline = job.Deadline,
+            Description = job.Description,
+            PostingDate = DateTime.Parse(job.PostingDate),
+            Deadline = DateTime.Parse(job.Deadline),
             Location = job.Location,
             Type = job.Type,
             Salary = job.Salary,
             Status = job.Status
         });
-        
-        return Ok(jobsDto);
-    }
-    
-    [HttpGet("search")] //added search path dont know if we want it
-    public async Task<ActionResult<IEnumerable<JobDto>>> SearchJobs([FromQuery] string query)
-    {
-        if (string.IsNullOrWhiteSpace(query))
-        {
-            return BadRequest("search query empty");
-        }
 
-        var response = await _jobServiceClient.ListJobsAsync(new ListJobsRequest() { Filter = query });
-        var jobsDto = response.Jobs.Select(job => new JobDto
+        return Ok(new ApiResponse<IEnumerable<JobDto>>()
         {
-            Id = job.Id,
-            Title = job.Title,
-            PostingDate = job.PostingDate,
-            Description = job.Description,
-            Status = job.Status,
-            Salary = job.Salary,
-            Type = job.Type,
-            Deadline = job.Deadline,
-            Location = job.Location
+            Data = jobsDto,
+            NextPageToken = listJobsResponse.NextPageToken
         });
-
-        return Ok(jobsDto);
     }
 }

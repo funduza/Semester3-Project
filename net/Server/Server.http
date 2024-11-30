@@ -1,6 +1,4 @@
-@Server_HostAddress = http://localhost:5207
+@Host = https://localhost:7267
 
-GET {{Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+### Get a list of all jobs
+GET {{Host}}/jobs

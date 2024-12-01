@@ -10,4 +10,8 @@
       <ProjectReference Include="..\DTOs\DTOs.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\bootstrap\fonts\" />
+    </ItemGroup>
+
 </Project>

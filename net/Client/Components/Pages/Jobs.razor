@@ -6,16 +6,16 @@
 <PageTitle>Student jobs - Jobz</PageTitle>
 
 <div class="py-3 bg-primary-subtle border-top border-primary border-opacity-25">
-    <div class="container hstack gap-2">
+    <form @onsubmit="GetJobsAsync" class="container hstack gap-2">
         <input @bind="filter" type="search" id="search" name="search" placeholder="Software developer" class="form-control form-control-lg border-0" />
-        <button @onclick="GetJobsAsync" type="button" class="btn btn-lg btn-primary flex-shrink-0">
+        <button type="submit" class="btn btn-lg btn-primary flex-shrink-0">
             Search job
         </button>
-    </div>
+    </form>
 </div>
 
 <div class="container py-3">
-    <h1 class="mb-3 fs-3">We found <strong>2342</strong> jobs for you</h1>
+    <h1 class="mb-3 fs-3">We found <strong>@totalSize</strong> jobs for you</h1>
 
     @if (!string.IsNullOrEmpty(error))
     {
@@ -49,15 +49,22 @@
                     </div>
                 </div>
             }
-            <button class="btn btn-secondary" @onclick="LoadMoreAsync">Load page @(nextPageToken + 1)</button>
+            @if (!string.IsNullOrEmpty(nextPageToken))
+            {
+                <div class="hstack justify-content-between align-items-center">
+                    <span>Page @(int.TryParse(nextPageToken, out var result) ? result : 1)</span>
+                    <button class="btn btn-secondary @(string.IsNullOrEmpty(nextPageToken) ? "disabled" : "")" @onclick="NextPageAsync">Next page</button>
+                </div>
+            }
         </div>
     }
 </div>
 
 @code {
     private IEnumerable<JobDto>? jobs;
-    private int pageToken;
-    private int nextPageToken;
+    private int pageSize = 12;
+    private string? nextPageToken;
+    private int totalSize;
     private string filter;
     private string? error;
 
@@ -68,11 +75,13 @@
 
     private async Task GetJobsAsync()
     {
+        // TODO: fix paging/filtering logic
         try
         {
-            var response = await HttpJobService.GetJobsAsync(pageToken, filter: filter);
-            jobs = jobs is null ? response.Data : jobs.Concat(response.Data);
+            var response = await HttpJobService.GetJobsAsync(nextPageToken ?? "", pageSize, filter);
+            jobs = response.Data;
             nextPageToken = response.NextPageToken;
+            totalSize = response.TotalSize;
         }
         catch (Exception e)
         {
@@ -80,9 +89,11 @@
         }
     }
 
-    private async Task LoadMoreAsync()
+    private async Task NextPageAsync()
     {
-        pageToken = nextPageToken;
-        await GetJobsAsync();
+        if (!string.IsNullOrEmpty(nextPageToken))
+        {
+            await GetJobsAsync();
+        }
     }
 }

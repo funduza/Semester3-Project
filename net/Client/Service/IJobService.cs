@@ -4,5 +4,5 @@ namespace Client.Service;
 
 public interface IJobService
 {
-    Task<ApiResponse<IEnumerable<JobDto>>> GetJobsAsync(int pageToken = 0, int pageSize = 12, string filter = "");
+    Task<ApiResponse<IEnumerable<JobDto>>> GetJobsAsync(string pageToken = "", int pageSize = 12, string filter = "");
 }

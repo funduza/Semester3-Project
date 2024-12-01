@@ -1,17 +1,15 @@
 using DTOs;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Primitives;
 
 namespace Client.Service;
 
 public class HttpJobService(HttpClient httpClient) : IJobService
 {
-    public async Task<ApiResponse<IEnumerable<JobDto>>> GetJobsAsync(int pageToken = 0, int pageSize = 12, string filter = "")
+    public async Task<ApiResponse<IEnumerable<JobDto>>> GetJobsAsync(string pageToken = "", int pageSize = 12, string filter = "")
     {
         var requestUri = QueryHelpers.AddQueryString("jobs", new Dictionary<string, string?>
         {
-            { "pageToken", pageToken.ToString() },
+            { "pageToken", pageToken },
             { "pageSize", pageSize.ToString() },
             { "filter", filter }
         });

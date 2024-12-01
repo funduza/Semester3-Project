@@ -17,16 +17,16 @@ public class JobsController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<ApiResponse<IEnumerable<JobDto>>>> GetJobsAsync(
-        [FromQuery] int pageToken,
-        [FromQuery] int pageSize,
+        [FromQuery] string pageToken = "",
+        [FromQuery] int pageSize = 12,
         [FromQuery] string filter = ""
     )
     {
         var listJobsResponse = await _jobServiceClient.ListJobsAsync(new ListJobsRequest()
         {
             Filter = filter,
-            PageToken = pageToken,
-            PageSize = pageSize
+            PageSize = pageSize,
+            PageToken = pageToken
         });
 
         var jobsDto = listJobsResponse.Jobs.Select(job => new JobDto()
@@ -45,7 +45,8 @@ public class JobsController : ControllerBase
         return Ok(new ApiResponse<IEnumerable<JobDto>>()
         {
             Data = jobsDto,
-            NextPageToken = listJobsResponse.NextPageToken
+            NextPageToken = listJobsResponse.NextPageToken,
+            TotalSize = listJobsResponse.TotalSize
         });
     }
 }

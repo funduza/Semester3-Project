@@ -24,15 +24,23 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
         log.info("GetAllJobsRequest: {}", request);
 
         int pageSize = request.getPageSize() == 0 ? 12 : request.getPageSize() > 64 ? 64 : request.getPageSize();
+        int pageToken;
+
+        try {
+            pageToken = Integer.parseInt(request.getPageToken());
+        } catch (Exception e) {
+            pageToken = 0;
+        }
+
         Page<Job> jobs;
 
         if(request.getFilter().isEmpty()) {
-            jobs = jobRepository.findAll(PageRequest.of(request.getPageToken(), pageSize));
+            jobs = jobRepository.findAll(PageRequest.of(pageToken, pageSize));
         } else {
             jobs = jobRepository.findByTitleContainsIgnoreCaseOrDescriptionContainsIgnoreCase(
                     request.getFilter(),
                     request.getFilter(),
-                    PageRequest.of(request.getPageToken(), pageSize));
+                    PageRequest.of(pageToken, pageSize));
         }
 
         List<JobProto> jobMessages = jobs.stream()
@@ -49,15 +57,16 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
                         .build())
                 .toList();
 
-        ListJobsResponse.Builder responseBuilder = ListJobsResponse
+        String nextPageToken = pageToken < jobs.getTotalPages() - 1 ? String.valueOf(pageToken + 1) : "";
+
+        ListJobsResponse response = ListJobsResponse
                 .newBuilder()
-                .addAllJobs(jobMessages);
+                .addAllJobs(jobMessages)
+                .setNextPageToken(nextPageToken)
+                .setTotalSize((int) jobs.getTotalElements())
+                .build();
 
-        if (request.getPageToken() < jobs.getTotalPages() - 1) {
-            responseBuilder.setNextPageToken(request.getPageToken() + 1).build();
-        }
-
-        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 }

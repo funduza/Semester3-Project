@@ -5,6 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+
 import sep3.project.jobservice.entities.Job;
 import sep3.project.jobservice.repositories.JobRepository;
 
@@ -18,6 +20,7 @@ public class JobServiceApplication {
     }
 
     @Bean
+    @Profile("dev")
     CommandLineRunner seedDatabase(JobRepository jobRepository) {
         return args -> {
             List<Job> jobs = new ArrayList<>();

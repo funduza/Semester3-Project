@@ -1,5 +1,4 @@
 using Client.Components;
-using Client.Components.Service;
 using Client.Service;
 
 var builder = WebApplication.CreateBuilder(args);

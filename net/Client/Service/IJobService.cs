@@ -1,8 +1,8 @@
 using DTOs;
 
-namespace Client.Components.Service;
+namespace Client.Service;
 
 public interface IJobService
 {
-    Task<List<JobDto>> GetAllJobsAsync();
+    Task<ApiResponse<IEnumerable<JobDto>>> GetJobsAsync(int pageToken = 0, int pageSize = 12, string filter = "");
 }

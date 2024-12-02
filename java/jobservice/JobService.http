@@ -1,0 +1,17 @@
+@Host = localhost:9090
+
+### JobService health
+GRPC {{Host}}/grpc.health.v1.Health/Check
+
+### Get a list of all jobs
+GRPC {{Host}}/JobService/ListJobs
+
+### Get a list of jobs matching the filter
+GRPC {{Host}}/JobService/ListJobs
+Content-Type: application/json
+
+{
+  "filter": "health",
+  "page_size": 2,
+  "page_token": 0
+}

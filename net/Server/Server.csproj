@@ -7,8 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.49.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -16,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="..\..\shared\protos\DataService.proto" GrpcServices="Client"/>
+        <Protobuf Include="..\..\shared\protos\job_service.proto" GrpcServices="Client" />
     </ItemGroup>
 
 </Project>

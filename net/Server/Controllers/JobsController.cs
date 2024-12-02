@@ -8,23 +8,45 @@ namespace Server.Controllers;
 [Route("jobs")]
 public class JobsController : ControllerBase
 {
-    private readonly Data.DataClient _dataClient;
+    private readonly JobService.JobServiceClient _jobServiceClient;
 
-    public JobsController(Data.DataClient dataClient)
+    public JobsController(JobService.JobServiceClient jobServiceClient)
     {
-        _dataClient = dataClient;
+        _jobServiceClient = jobServiceClient;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<JobDto>>> GetJobs()
+    public async Task<ActionResult<ApiResponse<IEnumerable<JobDto>>>> GetJobsAsync(
+        [FromQuery] string pageToken = "",
+        [FromQuery] int pageSize = 12,
+        [FromQuery] string filter = ""
+    )
     {
-        var response = await _dataClient.getAllJobsAsync(new GetAllJobsRequest());
-        var jobsDto = response.Jobs.Select(job => new JobDto()
+        var listJobsResponse = await _jobServiceClient.ListJobsAsync(new ListJobsRequest()
+        {
+            Filter = filter,
+            PageSize = pageSize,
+            PageToken = pageToken
+        });
+
+        var jobsDto = listJobsResponse.Jobs.Select(job => new JobDto()
         {
             Id = job.Id,
             Title = job.Title,
+            Description = job.Description,
+            PostingDate = DateTime.Parse(job.PostingDate),
+            Deadline = DateTime.Parse(job.Deadline),
+            Location = job.Location,
+            Type = job.Type,
+            Salary = job.Salary,
+            Status = job.Status
         });
-        
-        return Ok(jobsDto);
+
+        return Ok(new ApiResponse<IEnumerable<JobDto>>()
+        {
+            Data = jobsDto,
+            NextPageToken = listJobsResponse.NextPageToken,
+            TotalSize = listJobsResponse.TotalSize
+        });
     }
 }

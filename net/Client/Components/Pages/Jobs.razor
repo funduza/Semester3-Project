@@ -1,0 +1,99 @@
+﻿@page "/jobs"
+@using DTOs
+@rendermode InteractiveServer
+@inject IJobService HttpJobService
+
+<PageTitle>Student jobs - Jobz</PageTitle>
+
+<div class="py-3 bg-primary-subtle border-top border-primary border-opacity-25">
+    <form @onsubmit="GetJobsAsync" class="container hstack gap-2">
+        <input @bind="filter" type="search" id="search" name="search" placeholder="Software developer" class="form-control form-control-lg border-0" />
+        <button type="submit" class="btn btn-lg btn-primary flex-shrink-0">
+            Search job
+        </button>
+    </form>
+</div>
+
+<div class="container py-3">
+    <h1 class="mb-3 fs-3">We found <strong>@totalSize</strong> jobs for you</h1>
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+    else if (jobs is null)
+    {
+        <Loading />
+    }
+    else if (!jobs.Any())
+    {
+        <p>There are no available jobs at the moment :(</p>
+    }
+    else
+    {
+        <div class="vstack align-items-center gap-3">
+            @foreach (var job in jobs)
+            {
+                <div class="vstack align-items-start col p-3 border rounded-3 gap-2">
+                    <small class="text-body-secondary">
+                        @job.PostingDate.ToString("dd MMM. yyyy")
+                        <span> / </span>
+                        @job.Deadline.ToString("dd MMM. yyyy")
+                    </small>
+                    <h2 class="m-0 fs-3 fw-semibold">@job.Title</h2>
+                    <div class="fw-medium">Company</div>
+                    <div class="text-secondary">@job.Location</div>
+                    <div class="hstack gap-2">
+                        <div class="badge fs-6 fw-normal bg-info-subtle text-info-emphasis rounded-pill">@job.Type</div>
+                        <div class="badge fs-6 fw-normal bg-warning-subtle text-warning-emphasis rounded-pill">@job.Salary.ToString("C") / month</div>
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(nextPageToken))
+            {
+                <div class="hstack justify-content-between align-items-center">
+                    <span>Page @(int.TryParse(nextPageToken, out var result) ? result : 1)</span>
+                    <button class="btn btn-secondary @(string.IsNullOrEmpty(nextPageToken) ? "disabled" : "")" @onclick="NextPageAsync">Next page</button>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<JobDto>? jobs;
+    private int pageSize = 12;
+    private string? nextPageToken;
+    private int totalSize;
+    private string filter;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetJobsAsync();
+    }
+
+    private async Task GetJobsAsync()
+    {
+        // TODO: fix paging/filtering logic
+        try
+        {
+            var response = await HttpJobService.GetJobsAsync(nextPageToken ?? "", pageSize, filter);
+            jobs = response.Data;
+            nextPageToken = response.NextPageToken;
+            totalSize = response.TotalSize;
+        }
+        catch (Exception e)
+        {
+            error = e.Message;
+        }
+    }
+
+    private async Task NextPageAsync()
+    {
+        if (!string.IsNullOrEmpty(nextPageToken))
+        {
+            await GetJobsAsync();
+        }
+    }
+}

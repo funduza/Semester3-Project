@@ -40,6 +40,7 @@ public class JobsController : ControllerBase
             Type = job.Type,
             Salary = job.Salary,
             Status = job.Status
+            // TODO: add jobProvider
         });
 
         return Ok(new ApiResponse<IEnumerable<JobDto>>()
@@ -47,6 +48,35 @@ public class JobsController : ControllerBase
             Data = jobsDto,
             NextPageToken = listJobsResponse.NextPageToken,
             TotalSize = listJobsResponse.TotalSize
+        });
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<ApiResponse<JobDto>>> GetJobAsync([FromRoute] int id)
+    {
+        var jobResponse = await _jobServiceClient.GetJobAsync(new GetJobRequest()
+        {
+            Id = id
+        });
+        
+        var jobDto = new JobDto()
+        {
+            Id = jobResponse.Id,
+            Title = jobResponse.Title,
+            Description = jobResponse.Description,
+            PostingDate = DateTime.Parse(jobResponse.PostingDate),
+            Deadline = DateTime.Parse(jobResponse.Deadline),
+            Location = jobResponse.Location,
+            Type = jobResponse.Type,
+            Salary = jobResponse.Salary,
+            Status = jobResponse.Status
+            // TODO: add jobProvider
+        };
+
+        return Ok(new ApiResponse<JobDto>()
+        {
+            Data = jobDto,
+            TotalSize = 1
         });
     }
 }

@@ -6,11 +6,39 @@
 <PageTitle>Student jobs - Jobz</PageTitle>
 
 <div class="py-3 bg-primary-subtle border-top border-primary border-opacity-25">
-    <form @onsubmit="GetJobsAsync" class="container hstack gap-2">
-        <input @bind="filter" type="search" id="search" name="search" placeholder="Software developer" class="form-control form-control-lg border-0" />
-        <button type="submit" class="btn btn-lg btn-primary flex-shrink-0">
-            Search job
-        </button>
+    <form @onsubmit="GetJobsAsync" class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <input @bind="query" type="search" id="search" name="query" placeholder="Search query (e.g., Software developer)" class="form-control form-control-lg border-0" />
+            </div>
+            <div class="col-md-2">
+                <input @bind="minSalary" type="number" step="1" placeholder="Min Salary" class="form-control form-control-lg border-0" />
+            </div>
+            <div class="col-md-2">
+                <input @bind="maxSalary" type="number" step="1" placeholder="Max Salary" class="form-control form-control-lg border-0" />
+            </div>
+            <div class="col-md-2">
+                <input @bind="location" type="text" placeholder="Location" class="form-control form-control-lg border-0" />
+            </div>
+            <div class="col-md-2">
+                <select @bind="employmentType" class="form-select form-select-lg border-white">
+                    <option value="" selected>All Types</option>
+                    <option value="FullTime">Full Time</option>
+                    <option value="PartTime">Part Time</option>
+                    <option value="Internship">Internship</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col text-end">
+                <button type="submit" class="btn btn-lg btn-primary">
+                    Search Jobs
+                </button>
+                <button type="button" class="btn btn-lg btn-secondary ms-2" @onclick="ResetFiltersAsync">
+                    Reset
+                </button>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -19,35 +47,35 @@
 
     @if (!string.IsNullOrEmpty(error))
     {
-        <div class="alert alert-danger">@error</div>
+        <Alert AlertType="Alert.Type.Danger">@error</Alert>
     }
     else if (jobs is null)
     {
         <Loading />
     }
-    else if (!jobs.Any())
+    else if (totalSize == 0)
     {
-        <p>There are no available jobs at the moment :(</p>
+        <p>There are no available jobs matching your criteria at the moment :(</p>
     }
     else
     {
         <div class="vstack align-items-center gap-3">
             @foreach (var job in jobs)
             {
-                <div class="vstack align-items-start col p-3 border rounded-3 gap-2">
+                <NavLink href="@($"jobs/{job.Id}")" class="vstack align-items-start col p-3 border rounded-3 gap-2 text-decoration-none text-body">
                     <small class="text-body-secondary">
                         @job.PostingDate.ToString("dd MMM. yyyy")
                         <span> / </span>
                         @job.Deadline.ToString("dd MMM. yyyy")
                     </small>
                     <h2 class="m-0 fs-3 fw-semibold">@job.Title</h2>
-                    <div class="fw-medium">Company</div>
+                    <div class="fw-medium">Bla bla company</div>
                     <div class="text-secondary">@job.Location</div>
                     <div class="hstack gap-2">
                         <div class="badge fs-6 fw-normal bg-info-subtle text-info-emphasis rounded-pill">@job.Type</div>
                         <div class="badge fs-6 fw-normal bg-warning-subtle text-warning-emphasis rounded-pill">@job.Salary.ToString("C") / month</div>
                     </div>
-                </div>
+                </NavLink>
             }
             @if (!string.IsNullOrEmpty(nextPageToken))
             {
@@ -65,8 +93,13 @@
     private int pageSize = 12;
     private string? nextPageToken;
     private int totalSize;
-    private string filter;
     private string? error;
+
+    private string? query;
+    private double? minSalary;
+    private double? maxSalary;
+    private string? location;
+    private string? employmentType;
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,17 +108,20 @@
 
     private async Task GetJobsAsync()
     {
-        // TODO: fix paging/filtering logic
+        // TODO: check why the list does not render on first search
         try
         {
+            var filter = BuildFilter();
             var response = await HttpJobService.GetJobsAsync(nextPageToken ?? "", pageSize, filter);
             jobs = response.Data;
             nextPageToken = response.NextPageToken;
             totalSize = response.TotalSize;
+            error = null;
         }
         catch (Exception e)
         {
             error = e.Message;
+            jobs = null;
         }
     }
 
@@ -95,5 +131,38 @@
         {
             await GetJobsAsync();
         }
+    }
+
+    private string BuildFilter()
+    {
+        var filters = new List<string>();
+
+        if (!string.IsNullOrEmpty(query))
+            filters.Add($"(title=='^*{query}*' or description=='^*{query}*')");
+
+        if (minSalary.HasValue)
+            filters.Add($"salary=ge={minSalary}");
+
+        if (maxSalary.HasValue)
+            filters.Add($"salary=le={maxSalary}");
+
+        if (!string.IsNullOrEmpty(location))
+            filters.Add($"location=='^*{location}*'");
+
+        if (!string.IsNullOrEmpty(employmentType))
+            filters.Add($"type=='{employmentType}'");
+        
+        return string.Join(" and ", filters);
+    }
+
+    private async Task ResetFiltersAsync()
+    {
+        query = null;
+        minSalary = null;
+        maxSalary = null;
+        location = null;
+        employmentType = null;
+        nextPageToken = null;
+        await GetJobsAsync();
     }
 }

@@ -1,10 +1,12 @@
 package sep3.project.jobservice.grpc;
 
+import io.github.perplexhub.rsql.RSQLJPASupport;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import sep3.project.jobservice.entities.Job;
 import sep3.project.jobservice.repositories.JobRepository;
 
@@ -32,16 +34,8 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
             pageToken = 0;
         }
 
-        Page<Job> jobs;
-
-        if(request.getFilter().isEmpty()) {
-            jobs = jobRepository.findAll(PageRequest.of(pageToken, pageSize));
-        } else {
-            jobs = jobRepository.findByTitleContainsIgnoreCaseOrDescriptionContainsIgnoreCase(
-                    request.getFilter(),
-                    request.getFilter(),
-                    PageRequest.of(pageToken, pageSize));
-        }
+        Specification<Job> specification = RSQLJPASupport.toSpecification(request.getFilter());
+        Page<Job> jobs = jobRepository.findAll(specification, PageRequest.of(pageToken, pageSize));
 
         List<JobProto> jobMessages = jobs.stream()
                 .map(job -> JobProto.newBuilder()

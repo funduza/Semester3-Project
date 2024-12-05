@@ -11,9 +11,7 @@ GRPC {{Host}}/JobService/ListJobs
 Content-Type: application/json
 
 {
-  "filter": "health",
-  "page_size": 2,
-  "page_token": 0
+  "filter": "title==^*leg*;salary>100;status==Active"
 }
 
 ### Get a single job with id 1

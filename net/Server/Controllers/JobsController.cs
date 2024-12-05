@@ -58,7 +58,7 @@ public class JobsController : ControllerBase
         {
             Id = id
         });
-        
+
         var jobDto = new JobDto()
         {
             Id = jobResponse.Id,

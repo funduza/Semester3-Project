@@ -54,6 +54,12 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
                         .setType(job.getType().toString())
                         .setSalary(job.getSalary())
                         .setStatus(job.getStatus().toString())
+                        .setJobProvider(JobProviderProto.newBuilder()
+                                .setId(job.getJobProvider().getId())
+                                .setEmail(job.getJobProvider().getEmail())
+                                .setName(job.getJobProvider().getName())
+                                .setDescription(job.getJobProvider().getDescription())
+                                .setPhoneNumber(job.getJobProvider().getPhoneNumber()))
                         .build())
                 .toList();
 

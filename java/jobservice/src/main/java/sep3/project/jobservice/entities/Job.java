@@ -28,6 +28,9 @@ public class Job {
     private Double salary;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @ManyToOne
+    @JoinColumn(name = "job_provider_id", nullable = false)
+    private JobProvider jobProvider;
 
     public enum Type {
         PartTime, FullTime, Internship

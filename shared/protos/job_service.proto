@@ -10,6 +10,20 @@ service JobService {
   rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
 }
 
+// A representation of a JobProvider used in responses.
+message JobProviderProto {
+  // The job provider identifier
+  int64 id = 1;
+  // The job provider email
+  string email = 2;
+  // The job provider name
+  string name = 3;
+  // The job provider description
+  string description = 4;
+  // The job provider phone number
+  string phoneNumber = 5;
+}
+
 // A representation of a Job used in responses.
 message JobProto {
   // The job identifier
@@ -30,6 +44,8 @@ message JobProto {
   double salary = 8;
   // The job status, one of Active, Closed
   string status = 9;
+  // The job provider that posted the job
+  JobProviderProto jobProvider = 10;
 }
 
 // A request to be sent when calling the `ListJobs` method.

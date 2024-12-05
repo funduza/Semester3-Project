@@ -39,8 +39,15 @@ public class JobsController : ControllerBase
             Location = job.Location,
             Type = job.Type,
             Salary = job.Salary,
-            Status = job.Status
-            // TODO: add jobProvider
+            Status = job.Status,
+            JobProvider = new JobProviderDto()
+            {
+                Id = job.JobProvider.Id,
+                Email = job.JobProvider.Email,
+                Name = job.JobProvider.Name,
+                Description = job.JobProvider.Description,
+                PhoneNumber = job.JobProvider.PhoneNumber,
+            }
         });
 
         return Ok(new ApiResponse<IEnumerable<JobDto>>()
@@ -69,8 +76,15 @@ public class JobsController : ControllerBase
             Location = jobResponse.Location,
             Type = jobResponse.Type,
             Salary = jobResponse.Salary,
-            Status = jobResponse.Status
-            // TODO: add jobProvider
+            Status = jobResponse.Status,
+            JobProvider = new JobProviderDto()
+            {
+                Id = jobResponse.JobProvider.Id,
+                Email = jobResponse.JobProvider.Email,
+                Name = jobResponse.JobProvider.Name,
+                Description = jobResponse.JobProvider.Description,
+                PhoneNumber = jobResponse.JobProvider.PhoneNumber,
+            }
         };
 
         return Ok(new ApiResponse<JobDto>()

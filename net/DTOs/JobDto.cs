@@ -11,4 +11,5 @@ public class JobDto
     public required string Type { get; set; }
     public required double Salary { get; set; }
     public required string Status { get; set; }
+    public required JobProviderDto JobProvider { get; set; }
 }

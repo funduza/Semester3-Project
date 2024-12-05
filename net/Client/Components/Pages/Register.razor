@@ -1,0 +1,140 @@
+@page "/register"
+@using DTOs
+@rendermode InteractiveServer
+@inject IUserService HttpUserService
+
+<PageTitle>Register</PageTitle>
+
+<div class="container py-3">
+    <div class="row">
+        <h1 class="text-center mb-5">Register</h1>
+    </div>
+    <div class="row justify-content-center">
+        <form @onsubmit="RegisterAsync" class="col-md-4 p-4 rounded-3 shadow">
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <Alert AlertType="Alert.Type.Danger">@error</Alert>
+            }
+            @if (!string.IsNullOrEmpty(success))
+            {
+                <Alert AlertType="Alert.Type.Success">@success</Alert>
+            }
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" @bind="email" required/>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" @bind="password" required/>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="role" class="form-label">Role</label>
+                <select id="role" class="form-select" @bind="role" required>
+                    <option value="" selected>Select your role</option>
+                    <option value="JobSeeker">Job Seeker</option>
+                    <option value="JobProvider">Job Provider</option>
+                </select>
+            </div>
+            @if (!string.IsNullOrEmpty(role))
+            {
+                @if (role.Equals("JobSeeker"))
+                {
+                    <div class="mt-3 mb-3">
+                        <label for="first_name" class="form-label">First name</label>
+                        <input type="text" class="form-control" id="first_name" @bind="firstName" placeholder="John" required/>
+                    </div>
+                    <div class="mt-3 mb-3">
+                        <label for="last_name" class="form-label">Last name</label>
+                        <input type="text" class="form-control" id="last_name" @bind="lastName" placeholder="Doe" required/>
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-3 mb-3">
+                        <label for="company_name" class="form-label">Company name</label>
+                        <input type="text" class="form-control" id="company_name" @bind="companyName" placeholder="Corp Inc." required/>
+                    </div>
+                }
+            }
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+
+
+@code {
+    private string firstName = "";
+    private string lastName = "";
+    private string companyName = "";
+    private string email = "";
+    private string password = "";
+    private string role = "";
+    private string? success;
+    private string? error;
+
+    private async Task RegisterAsync()
+    {
+        try
+        {
+            ValidateInputs();
+
+            if (role.Equals("JobSeeker"))
+            {
+                await HttpUserService.RegisterAsync(new JobSeekerDto()
+                {
+                    Email = email,
+                    Password = password,
+                    Role = role,
+                    FirstName = firstName,
+                    LastName = lastName
+                });
+            }
+            else
+            {
+                await HttpUserService.RegisterAsync(new JobProviderDto()
+                {
+                    Email = email,
+                    Password = password,
+                    Role = role,
+                    Name = companyName
+                });
+            }
+
+            success = "Registration successful";
+            error = null;
+            ResetForm();
+        }
+        catch (Exception e)
+        {
+            success = null;
+            error = e.Message;
+        }   
+    }
+
+    private void ValidateInputs()
+    {
+        if (string.IsNullOrEmpty(role)) throw new Exception("Please choose a role");
+        if (role.Equals("JobSeeker"))
+        {
+            if (string.IsNullOrEmpty(firstName)) throw new Exception("FirstName cannot be empty. Please enter firstName");
+            if (string.IsNullOrEmpty(lastName)) throw new Exception("LastName cannot be empty. Please enter the lastName");
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(companyName)) throw new Exception("Company Name cannot be empty. Please enter the name");   
+        }
+        if (string.IsNullOrEmpty(email)) throw new Exception("Email cannot be empty. Please write the email");
+        if (string.IsNullOrEmpty(password)) throw new Exception("Password cannot be empty. Please write the password");
+        if (string.IsNullOrEmpty(role)) throw new Exception("Please choose a role");
+    }
+
+    private void ResetForm()
+    {
+        firstName = "";
+        lastName = "";
+        companyName = "";
+        email = "";
+        password = "";
+        role = "";
+    }
+}

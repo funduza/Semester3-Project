@@ -8,6 +8,8 @@ option csharp_namespace = "Server.Grpc";
 service JobService {
   // A method to get a list of jobs and optionally filter it.
   rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
+  // A method to get a single job resource.
+  rpc GetJob(GetJobRequest) returns (JobProto);
 }
 
 // A representation of a JobProvider used in responses.
@@ -76,4 +78,10 @@ message ListJobsResponse {
 
   // The total number of items in the collection
   int32 total_size = 3;
+}
+
+// A request to be sent when calling the `GetJobs` method.
+message GetJobRequest {
+  // The id of the job to get.
+  int64 id = 1;
 }

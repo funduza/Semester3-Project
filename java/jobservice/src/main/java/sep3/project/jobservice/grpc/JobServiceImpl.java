@@ -75,4 +75,32 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void getJob(GetJobRequest request, StreamObserver<JobProto> responseObserver) {
+        log.info("GetJobRequest: {}", request);
+
+        Job job = jobRepository.findById(request.getId()).orElseThrow();
+
+        JobProto response = JobProto.newBuilder()
+                .setId(job.getId())
+                .setTitle(job.getTitle())
+                .setDescription(job.getDescription())
+                .setPostingDate(job.getPostingDate().toString())
+                .setDeadline(job.getDeadline().toString())
+                .setLocation(job.getLocation())
+                .setType(job.getType().toString())
+                .setSalary(job.getSalary())
+                .setStatus(job.getStatus().toString())
+                .setJobProvider(JobProviderProto.newBuilder()
+                        .setId(job.getJobProvider().getId())
+                        .setEmail(job.getJobProvider().getEmail())
+                        .setName(job.getJobProvider().getName())
+                        .setDescription(job.getJobProvider().getDescription())
+                        .setPhoneNumber(job.getJobProvider().getPhoneNumber()))
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 }

@@ -48,13 +48,16 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
                         .setType(job.getType().toString())
                         .setSalary(job.getSalary())
                         .setStatus(job.getStatus().toString())
-                        .setJobProvider(JobProviderProto.newBuilder()
+                        .setJobProvider(UserProto.newBuilder()
                                 .setId(job.getJobProvider().getId())
                                 .setEmail(job.getJobProvider().getEmail())
-                                .setName(job.getJobProvider().getName())
-                                .setDescription(job.getJobProvider().getDescription())
-                                .setPhoneNumber(job.getJobProvider().getPhoneNumber()))
-                        .build())
+                                .setJobProvider(JobProviderProto.newBuilder()
+                                        .setName(job.getJobProvider().getName())
+                                        .setDescription(job.getJobProvider().getDescription())
+                                        .setPhoneNumber(job.getJobProvider().getPhoneNumber()))
+                                .build())
+                        .build()
+                )
                 .toList();
 
         String nextPageToken = pageToken < jobs.getTotalPages() - 1 ? String.valueOf(pageToken + 1) : "";
@@ -86,12 +89,14 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
                 .setType(job.getType().toString())
                 .setSalary(job.getSalary())
                 .setStatus(job.getStatus().toString())
-                .setJobProvider(JobProviderProto.newBuilder()
+                .setJobProvider(UserProto.newBuilder()
                         .setId(job.getJobProvider().getId())
                         .setEmail(job.getJobProvider().getEmail())
-                        .setName(job.getJobProvider().getName())
-                        .setDescription(job.getJobProvider().getDescription())
-                        .setPhoneNumber(job.getJobProvider().getPhoneNumber()))
+                        .setJobProvider(JobProviderProto.newBuilder()
+                                .setName(job.getJobProvider().getName())
+                                .setDescription(job.getJobProvider().getDescription())
+                                .setPhoneNumber(job.getJobProvider().getPhoneNumber()))
+                        .build())
                 .build();
 
         responseObserver.onNext(response);

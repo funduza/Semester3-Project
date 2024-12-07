@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "sep3.project.jobservice.grpc";
+option csharp_namespace = "Server.Grpc";
+
+import "google/protobuf/empty.proto";
+
+// A service operating on User resources.
+service UserService {
+  // A method to get a list of users.
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  // A method to get a single user resource.
+  rpc GetUser(GetUserRequest) returns (UserProto);
+  // A method to create an user resource.
+  rpc CreateUser(CreateUserRequest) returns (UserProto);
+  // A method to update an user resource.
+  rpc UpdateUser(UpdateUserRequest) returns (UserProto);
+  // A method to delete an user resource.
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
+}
+
+// A request to be sent when calling the `ListUsers` method.
+message ListUsersRequest {
+  // The maximum number of users to return. The service may return fewer than this value.
+  // If unspecified, at most 12 users will be returned.
+  // The maximum value is 64; values above 64 will be coerced to 64.
+  optional int32 page_size = 2;
+
+  // A page token, received from a previous `ListUsers` call.
+  // Provide this to retrieve the subsequent page.
+  // If the number is invalid or not provided it will default to 0.
+  optional string page_token = 3;
+}
+
+// A response received when calling the `ListUsers` method.
+message ListUsersResponse {
+  // The list of users
+  repeated UserProto users = 1;
+
+  // A token, which can be sent as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+
+  // The total number of items in the collection
+  int32 total_size = 3;
+}
+
+// A request to be sent when calling the `GetUser` method.
+message GetUserRequest {
+  // The id of the user to retrieve.
+  int64 id = 1;
+}
+
+// A request to be sent when calling the `CreateUser` method.
+message CreateUserRequest {
+  // The user to create.
+  UserProto user = 1;
+}
+
+// A request to be sent when calling the `UpdateUser` method.
+message UpdateUserRequest {
+  // The user to update.
+  // The user's `id` field is used to identify the user to update.
+  UserProto user = 1;
+}
+
+// A request to be sent when calling the `DeleteUser` method.
+message DeleteUserRequest {
+  // The id of the user to delete.
+  int64 id = 1;
+}
+
+// A representation of a `User` resource.
+message UserProto {
+  // The user identifier.
+  int64 id = 1;
+  // The user email, it is considered to be unique.
+  string email = 2;
+  // The user password.
+  string password = 3;
+  // The user role, must be one of `JobProvider`, `JobSeeker`.
+  string role = 4;
+
+  // Passed the corresponding one based on the provided role.
+  oneof user_type {
+    // If the user role is `JobProvider`.
+    JobProviderProto jobProvider = 5;
+    // If the user role is `JobSeeker`.
+    JobSeekerProto jobSeeker = 6;
+  }
+}
+
+// A representation of a `JobProvider` resource.
+message JobProviderProto {
+  // The job provider name.
+  string name = 3;
+  // The job provider description.
+  optional string description = 4;
+  // The job provider phone number.
+  optional string phoneNumber = 5;
+}
+
+// A representation of a `JobSeeker` resource.
+message JobSeekerProto {
+  // The job seeker first name.
+  string firstName = 1;
+  // The job seeker last name.
+  string lastName = 2;
+  // The job seeker phone number.
+  optional string phoneNumber = 3;
+  // The job seeker resume.
+  optional string resume = 4;
+}

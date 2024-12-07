@@ -1,0 +1,63 @@
+@Host = localhost:9090
+
+### Service health
+GRPC {{Host}}/grpc.health.v1.Health/Check
+
+
+### Get a list of users
+GRPC {{Host}}/UserService/ListUsers
+Content-Type: application/json
+
+{
+  "page_size": 2,
+  "page_token": 0
+}
+
+### Get a user
+GRPC {{Host}}/UserService/GetUser
+Content-Type: application/json
+
+{
+  "id": 1
+}
+
+### Create a user
+GRPC {{Host}}/UserService/CreateUser
+Content-Type: application/json
+
+{
+  "user": {
+    "email": "test@example.com",
+    "password": "test",
+    "role": "JobSeeker",
+    "jobSeeker": {
+      "firstName": "test",
+      "lastName": "test"
+    }
+  }
+}
+
+### Update a user
+GRPC {{Host}}/UserService/UpdateUser
+Content-Type: application/json
+
+{
+  "user": {
+    "id": 21,
+    "email": "test2@example.com",
+    "password": "test2",
+    "role": "JobSeeker",
+    "jobSeeker": {
+      "firstName": "test2",
+      "lastName": "test2"
+    }
+  }
+}
+
+### Delete a user
+GRPC {{Host}}/UserService/DeleteUser
+Content-Type: application/json
+
+{
+  "id": 21
+}

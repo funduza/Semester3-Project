@@ -1,6 +1,7 @@
 package sep3.project.jobservice.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
@@ -8,8 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class JobSeeker extends User {
+    @NotBlank
     @Column(nullable = false)
     private String firstName;
+    @NotBlank
     @Column(nullable = false)
     private String lastName;
     private String phoneNumber;

@@ -44,9 +44,9 @@ public class JobsController : ControllerBase
             {
                 Id = job.JobProvider.Id,
                 Email = job.JobProvider.Email,
-                Name = job.JobProvider.Name,
-                Description = job.JobProvider.Description,
-                PhoneNumber = job.JobProvider.PhoneNumber,
+                Name = job.JobProvider.JobProvider.Name,
+                Description = job.JobProvider.JobProvider.Description,
+                PhoneNumber = job.JobProvider.JobProvider.PhoneNumber,
             }
         });
 
@@ -81,9 +81,9 @@ public class JobsController : ControllerBase
             {
                 Id = jobResponse.JobProvider.Id,
                 Email = jobResponse.JobProvider.Email,
-                Name = jobResponse.JobProvider.Name,
-                Description = jobResponse.JobProvider.Description,
-                PhoneNumber = jobResponse.JobProvider.PhoneNumber,
+                Name = jobResponse.JobProvider.JobProvider.Name,
+                Description = jobResponse.JobProvider.JobProvider.Description,
+                PhoneNumber = jobResponse.JobProvider.JobProvider.PhoneNumber,
             }
         };
 

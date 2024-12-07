@@ -4,26 +4,14 @@ option java_multiple_files = true;
 option java_package = "sep3.project.jobservice.grpc";
 option csharp_namespace = "Server.Grpc";
 
+import "user_service.proto";
+
 // A service operating on Job resources.
 service JobService {
   // A method to get a list of jobs and optionally filter it.
   rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
   // A method to get a single job resource.
   rpc GetJob(GetJobRequest) returns (JobProto);
-}
-
-// A representation of a JobProvider used in responses.
-message JobProviderProto {
-  // The job provider identifier
-  int64 id = 1;
-  // The job provider email
-  string email = 2;
-  // The job provider name
-  string name = 3;
-  // The job provider description
-  string description = 4;
-  // The job provider phone number
-  string phoneNumber = 5;
 }
 
 // A representation of a Job used in responses.
@@ -47,7 +35,7 @@ message JobProto {
   // The job status, one of Active, Closed
   string status = 9;
   // The job provider that posted the job
-  JobProviderProto jobProvider = 10;
+  UserProto jobProvider = 10;
 }
 
 // A request to be sent when calling the `ListJobs` method.

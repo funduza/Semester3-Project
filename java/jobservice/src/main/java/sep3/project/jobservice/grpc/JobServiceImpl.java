@@ -23,7 +23,7 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
 
     @Override
     public void listJobs(ListJobsRequest request, StreamObserver<ListJobsResponse> responseObserver) {
-        log.info("GetAllJobsRequest: {}", request);
+        log.info("ListJobsRequest: {}", request);
 
         int pageSize = request.getPageSize() == 0 ? 12 : request.getPageSize() > 64 ? 64 : request.getPageSize();
         int pageToken;

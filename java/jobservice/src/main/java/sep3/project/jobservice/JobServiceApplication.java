@@ -7,12 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import sep3.project.jobservice.entities.Job;
+import sep3.project.jobservice.entities.JobApplication;
 import sep3.project.jobservice.entities.JobProvider;
 import sep3.project.jobservice.entities.JobSeeker;
-import sep3.project.jobservice.repositories.JobProviderRepository;
-import sep3.project.jobservice.repositories.JobRepository;
-import sep3.project.jobservice.repositories.JobSeekerRepository;
-import sep3.project.jobservice.repositories.UserRepository;
+import sep3.project.jobservice.repositories.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +26,12 @@ public class JobServiceApplication {
 
     @Bean
     @Profile("dev")
-    CommandLineRunner seedDatabase(JobRepository jobRepository, UserRepository userRepository, JobProviderRepository jobProviderRepository, JobSeekerRepository jobSeekerRepository) {
+    CommandLineRunner seedDatabase(JobRepository jobRepository, JobProviderRepository jobProviderRepository, JobSeekerRepository jobSeekerRepository, JobApplicationRepository jobApplicationRepository) {
         return args -> {
             List<JobSeeker> jobSeekers = new ArrayList<>();
             List<JobProvider> jobProviders = new ArrayList<>();
             List<Job> jobs = new ArrayList<>();
+            List<JobApplication> jobApplications = new ArrayList<>();
 
             Faker faker = new Faker(new Locale("da-DK"), new Random(42));
 
@@ -49,7 +48,7 @@ public class JobServiceApplication {
                 jobSeekers.add(jobSeeker);
             }
 
-            jobSeekerRepository.saveAll(jobSeekers);
+            List<JobSeeker> savedJobSeekers = jobSeekerRepository.saveAll(jobSeekers);
 
             for (int i = 0; i < 10; i++) {
                 JobProvider jobProvider = JobProvider.newBuilder()
@@ -80,7 +79,18 @@ public class JobServiceApplication {
                 jobs.add(job);
             }
 
-            jobRepository.saveAll(jobs);
+            List<Job> savedJobs = jobRepository.saveAll(jobs);
+
+            for (int i = 0; i < 10; i++) {
+                JobApplication jobApplication = JobApplication.newBuilder()
+                        .setJob(savedJobs.get(faker.random().nextInt(jobs.size())))
+                        .setJobSeeker(savedJobSeekers.get(faker.random().nextInt(savedJobSeekers.size())))
+                        .setStatus(JobApplication.Status.values()[faker.random().nextInt(JobApplication.Status.values().length)])
+                        .build();
+                jobApplications.add(jobApplication);
+            }
+
+            jobApplicationRepository.saveAll(jobApplications);
         };
     }
 }

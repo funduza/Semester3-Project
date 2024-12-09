@@ -2,7 +2,12 @@ package sep3.project.jobservice.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -18,6 +23,8 @@ public class JobSeeker extends User {
     private String phoneNumber;
     @Column(columnDefinition = "TEXT")
     private String resume;
+    @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobApplication> jobApplications;
 
     @Builder(builderMethodName = "newBuilder", setterPrefix = "set")
     public JobSeeker(Long id, String email, String password, String firstName, String lastName, String phoneNumber, String resume) {

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -31,6 +32,8 @@ public class Job {
     @ManyToOne
     @JoinColumn(name = "job_provider_id", nullable = false)
     private JobProvider jobProvider;
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobApplication> jobApplications;
 
     public enum Type {
         PartTime, FullTime, Internship

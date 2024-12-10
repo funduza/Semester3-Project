@@ -1,0 +1,59 @@
+@page "/login"
+@using Client.Auth
+@using DTOs
+@rendermode InteractiveServer
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login</PageTitle>
+
+<div class="container py-5">
+    <div class="row">
+        <h1 class="text-center mb-5">Login</h1>
+    </div>
+    <div class="row justify-content-center">
+        <EditForm Model="Model" OnValidSubmit="LoginAsync" FormName="LoginForm" Enhance class="col-md-4 p-4 rounded-3 shadow">
+            <DataAnnotationsValidator/>
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <Alert AlertType="Alert.Type.Danger">@error</Alert>
+            }
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <InputText type="email" class="form-control" id="email" required @bind-Value="Model.Email"/>
+                <ValidationMessage For="() => Model.Email" class="text-danger small"/>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <InputText type="password" class="form-control" id="password" required @bind-Value="Model.Password"/>
+                <ValidationMessage For="() => Model.Password" class="text-danger small" />
+            </div>
+            <button class="btn btn-primary" type="submit">Login</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private LoginDto Model { get; set; } = new()
+    {
+        Email = "",
+        Password = ""
+    };
+
+    private string? error;
+
+    private async Task LoginAsync()
+    {
+        try
+        {
+            error = null;
+            await ((ApiAuthProvider)AuthenticationStateProvider).LoginAsync(Model);
+            NavigationManager.NavigateTo("/");
+        }
+        catch (Exception exception)
+        {
+            error = exception.Message;
+        }
+    }
+}

@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="app.css"/>
     <link rel="icon" href="favicon.svg"/>
     <link rel="mask-icon" href="favicon.svg"/>
-    <HeadOutlet/>
+    <HeadOutlet @rendermode="InteractiveServer"/>
     <script src="bootstrap/bootstrap.bundle.min.js"></script>
 </head>
 
 <body class="vstack">
-<Routes/>
+<Routes @rendermode="InteractiveServer"/>
 <script src="_framework/blazor.web.js"></script>
 </body>
 

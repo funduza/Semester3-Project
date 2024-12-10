@@ -1,4 +1,8 @@
-﻿<nav class="navbar navbar-expand-lg bg-primary-subtle">
+﻿@using System.Security.Claims
+@using Client.Auth
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<nav class="navbar navbar-expand-lg bg-primary-subtle">
     <div class="container">
         <NavLink class="navbar-brand" href="" Match="NavLinkMatch.All">
             <i class="bi bi-duffle-fill fs-3 text-primary"></i>
@@ -12,10 +16,19 @@
                 <li class="nav-item">
                     <NavLink class="nav-link" href="/jobs">Jobs</NavLink>
                 </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/register">Register</NavLink>
-                </li>
             </ul>
+            <div class="d-flex gap-3 align-items-center">
+                <AuthorizeView>
+                    <Authorized>
+                        <span>@context.User.FindFirstValue(ClaimTypes.Email)</span>
+                        <button @onclick="async () => await ((ApiAuthProvider)AuthenticationStateProvider).LogoutAsync()" class="btn btn-outline-danger">Logout</button>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink class="nav-link" href="/register">Register</NavLink>
+                        <NavLink class="btn btn-outline-primary" href="/login">Login</NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
         </div>
     </div>
 </nav>

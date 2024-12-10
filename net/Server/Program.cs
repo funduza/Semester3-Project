@@ -1,12 +1,13 @@
 using Grpc.Core;
 using Grpc.Net.Client.Configuration;
+using Grpc.Net.ClientFactory;
 using Server.Grpc;
 using Server.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddGrpcClient<JobService.JobServiceClient>(options =>
+Action<GrpcClientFactoryOptions> configureClient = options =>
 {
     options.Address = new Uri("http://localhost:9090");
     options.ChannelOptionsActions.Add(channelOptions =>
@@ -30,7 +31,9 @@ builder.Services.AddGrpcClient<JobService.JobServiceClient>(options =>
             }
         };
     });
-});
+};
+builder.Services.AddGrpcClient<JobService.JobServiceClient>(configureClient);
+builder.Services.AddGrpcClient<UserService.UserServiceClient>(configureClient);
 builder.Services.AddControllers();
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 

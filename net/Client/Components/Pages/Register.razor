@@ -1,7 +1,8 @@
 @page "/register"
 @using DTOs
 @rendermode InteractiveServer
-@inject IUserService HttpUserService
+@inject IAuthService HttpAuthService
+@inject NavigationManager NavigationManager;
 
 <PageTitle>Register</PageTitle>
 
@@ -77,32 +78,18 @@
         try
         {
             ValidateInputs();
-
-            if (role.Equals("JobSeeker"))
+            
+            await HttpAuthService.RegisterAsync(new RegisterDto()
             {
-                await HttpUserService.RegisterAsync(new JobSeekerDto()
-                {
-                    Email = email,
-                    Password = password,
-                    Role = role,
-                    FirstName = firstName,
-                    LastName = lastName
-                });
-            }
-            else
-            {
-                await HttpUserService.RegisterAsync(new JobProviderDto()
-                {
-                    Email = email,
-                    Password = password,
-                    Role = role,
-                    Name = companyName
-                });
-            }
+                Email = email,
+                Password = password,
+                Role = role,
+                FirstName = firstName,
+                LastName = lastName,
+                Name = companyName
+            });
 
-            success = "Registration successful";
-            error = null;
-            ResetForm();
+            NavigationManager.NavigateTo("login");
         }
         catch (Exception e)
         {

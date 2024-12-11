@@ -10,7 +10,7 @@ import "google/protobuf/empty.proto";
 service UserService {
   // A method to get a list of users.
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
-  // A method to get a single user resource.
+  // A method to get a single user resource by id or email.
   rpc GetUser(GetUserRequest) returns (UserProto);
   // A method to create an user resource.
   rpc CreateUser(CreateUserRequest) returns (UserProto);
@@ -48,8 +48,12 @@ message ListUsersResponse {
 
 // A request to be sent when calling the `GetUser` method.
 message GetUserRequest {
-  // The id of the user to retrieve.
-  int64 id = 1;
+  oneof name {
+    // The id of the user to retrieve.
+    int64 id = 1;
+    // The email of the user to retrieve.
+    string email = 2;
+  }
 }
 
 // A request to be sent when calling the `CreateUser` method.

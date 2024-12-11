@@ -7,6 +7,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import sep3.project.jobservice.entities.JobProvider;
 import sep3.project.jobservice.entities.JobSeeker;
 import sep3.project.jobservice.entities.User;
@@ -90,7 +91,15 @@ public class UserServiceImpl extends UserServiceGrpc.UserServiceImplBase {
     public void getUser(GetUserRequest request, StreamObserver<UserProto> responseObserver) {
         log.info("GetUserRequest: {}", request);
 
-        User user = userRepository.findById(request.getId()).orElseThrow();
+        Specification<User> userByIdOrEmail = (root, query, criteriaBuilder) -> {
+            if (!request.getEmail().isEmpty()) {
+                return criteriaBuilder.equal(root.get("email"), request.getEmail());
+            } else {
+                return criteriaBuilder.equal(root.get("id"), request.getId());
+            }
+        };
+
+        User user = userRepository.findOne(userByIdOrEmail).orElseThrow();
 
         UserProto.Builder builder = UserProto.newBuilder()
                 .setId(user.getId())

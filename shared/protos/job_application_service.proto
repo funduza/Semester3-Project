@@ -13,11 +13,11 @@ service JobApplicationService {
 // A representation of a JobApplication.
 message JobApplicationProto {
   // The job application identifier.
-  int64 id = 1;
+  optional int64 id = 1;
   // The status of the job application one of InProgress, Approved, Declined.
-  string status = 4;
+  optional string status = 4;
   // The date when the application was submitted.
-  string applicationDate = 5;
+  optional string applicationDate = 5;
   // The job id this job application is for.
   int64 jobId = 3;
   // The job seeker id that submitted the job application.

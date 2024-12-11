@@ -1,0 +1,15 @@
+@Host = localhost:9090
+
+### JobApplication service health
+GRPC {{Host}}/grpc.health.v1.Health/Check
+
+### Create a job application
+GRPC {{Host}}/JobApplicationService/CreateJobApplication
+Content-Type: application/json
+
+{
+  "jobApplication": {
+    "jobId": 1,
+    "jobSeekerId": 1
+  }
+}

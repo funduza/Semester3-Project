@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "sep3.project.jobservice.grpc";
+option csharp_namespace = "Server.Grpc";
+
+// A service operating on JobApplication resources.
+service JobApplicationService {
+  // A method to create a job application resource.
+  rpc CreateJobApplication(CreateJobApplicationRequest) returns (JobApplicationProto);
+}
+
+// A representation of a JobApplication.
+message JobApplicationProto {
+  // The job application identifier.
+  optional int64 id = 1;
+  // The status of the job application one of InProgress, Approved, Declined.
+  optional string status = 4;
+  // The date when the application was submitted.
+  optional string applicationDate = 5;
+  // The job id this job application is for.
+  int64 jobId = 3;
+  // The job seeker id that submitted the job application.
+  int64 jobSeekerId = 2;
+}
+
+// A request to be sent when calling the CreateJobApplication method.
+message CreateJobApplicationRequest {
+  // The JobApplication to create.
+  JobApplicationProto jobApplication = 1;
+}

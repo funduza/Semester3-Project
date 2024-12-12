@@ -1,0 +1,25 @@
+﻿@inject NavigationManager NavigationManager
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+    [Parameter, EditorRequired]
+    public required string Uri { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthenticationState is null)
+        {
+            NavigationManager.NavigateTo(Uri);
+            return;
+        }
+        
+        var authState = await AuthenticationState;
+        var user = authState?.User;
+        
+        if (user?.Identity is null || !user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo(Uri);
+        }
+    }
+}

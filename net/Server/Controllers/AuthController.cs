@@ -1,6 +1,7 @@
 using DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Server.Grpc;
+using Server.Mapper;
 using ArgumentException = System.ArgumentException;
 
 namespace Server.Controllers;
@@ -47,16 +48,14 @@ public class AuthController : ControllerBase
                     throw new ArgumentException("Role is required. Use JobProvider or JobSeeker.");
             }
 
-            var user = await _userServiceClient.CreateUserAsync(new CreateUserRequest()
+            var userProto = await _userServiceClient.CreateUserAsync(new CreateUserRequest()
             {
                 User = newUser
             });
             
-            return Ok(new UserDto() {
-                Id = user.Id,
-                Email = user.Email,
-                Role = user.Role
-            });
+            var response = UserMapper.ToDto(userProto);
+            
+            return Ok(response);
         }
         catch (Exception exception)
         {
@@ -69,18 +68,16 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var user = await _userServiceClient.GetUserAsync(new GetUserRequest()
+            var userProto = await _userServiceClient.GetUserAsync(new GetUserRequest()
             {
                 Email = loginDto.Email,
             });
 
-            if (user.Password != loginDto.Password) throw new Exception("Wrong password");
+            if (userProto.Password != loginDto.Password) throw new Exception("Wrong password");
 
-            return Ok(new UserDto() {
-                Id = user.Id,
-                Email = user.Email,
-                Role = user.Role
-            });
+            var response = UserMapper.ToDto(userProto);
+            
+            return Ok(response);
         }
         catch (Exception exception)
         {

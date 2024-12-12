@@ -129,7 +129,7 @@ public class HttpJobServiceTest
             Title = "Job 1",
             Type = "s",
             PostingDate = DateTime.Today,
-            JobProvider = new JobProviderDto()
+            JobProvider = new UserDto()
             {
                 Email = "test@test.com",
                 Name = "Test"

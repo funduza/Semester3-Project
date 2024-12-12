@@ -11,6 +11,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri("https://localhost:7267") });
 builder.Services.AddScoped<IJobService, HttpJobService>();
+builder.Services.AddScoped<IUserService, HttpUserService>();
 builder.Services.AddScoped<IAuthService, HttpAuthService>();
 builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthProvider>();
 

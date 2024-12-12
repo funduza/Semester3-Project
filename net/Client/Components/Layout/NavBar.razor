@@ -20,7 +20,7 @@
             <div class="d-flex gap-3 align-items-center">
                 <AuthorizeView>
                     <Authorized>
-                        <span>@context.User.FindFirstValue(ClaimTypes.Email)</span>
+                        <NavLink class="nav-link" href="/profile">@context.User.FindFirstValue(ClaimTypes.Email)</NavLink>
                         <button @onclick="async () => await ((ApiAuthProvider)AuthenticationStateProvider).LogoutAsync()" class="btn btn-outline-danger">Logout</button>
                     </Authorized>
                     <NotAuthorized>

@@ -40,7 +40,7 @@ public class JobsController : ControllerBase
             Type = job.Type,
             Salary = job.Salary,
             Status = job.Status,
-            JobProvider = new JobProviderDto()
+            JobProvider = new UserDto()
             {
                 Id = job.JobProvider.Id,
                 Email = job.JobProvider.Email,
@@ -77,7 +77,7 @@ public class JobsController : ControllerBase
             Type = jobResponse.Type,
             Salary = jobResponse.Salary,
             Status = jobResponse.Status,
-            JobProvider = new JobProviderDto()
+            JobProvider = new UserDto()
             {
                 Id = jobResponse.JobProvider.Id,
                 Email = jobResponse.JobProvider.Email,

@@ -12,6 +12,8 @@ service JobService {
   rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
   // A method to get a single job resource.
   rpc GetJob(GetJobRequest) returns (JobProto);
+  // A method to create a new job.
+  rpc CreateJob(CreateJobRequest) returns (JobProto);
 }
 
 // A representation of a Job used in responses.
@@ -36,6 +38,12 @@ message JobProto {
   string status = 9;
   // The job provider that posted the job
   UserProto jobProvider = 10;
+}
+
+// A request message for creating a new job.
+message CreateJobRequest {
+  // The job to create.
+  JobProto job = 1;
 }
 
 // A request to be sent when calling the `ListJobs` method.

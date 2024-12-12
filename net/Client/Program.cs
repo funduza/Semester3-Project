@@ -13,6 +13,7 @@ builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri("https://
 builder.Services.AddScoped<IJobService, HttpJobService>();
 builder.Services.AddScoped<IUserService, HttpUserService>();
 builder.Services.AddScoped<IAuthService, HttpAuthService>();
+builder.Services.AddScoped<IApplicationService, HttpApplicationService>();
 builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthProvider>();
 
 var app = builder.Build();

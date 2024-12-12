@@ -34,6 +34,7 @@ Action<GrpcClientFactoryOptions> configureClient = options =>
 };
 builder.Services.AddGrpcClient<JobService.JobServiceClient>(configureClient);
 builder.Services.AddGrpcClient<UserService.UserServiceClient>(configureClient);
+builder.Services.AddGrpcClient<JobApplicationService.JobApplicationServiceClient>(configureClient);
 builder.Services.AddControllers();
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 

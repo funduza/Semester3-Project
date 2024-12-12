@@ -3,9 +3,7 @@ package sep3.project.jobservice.grpc;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
-import sep3.project.jobservice.entities.Job;
-import sep3.project.jobservice.entities.JobApplication;
-import sep3.project.jobservice.entities.JobSeeker;
+import sep3.project.jobservice.entities.*;
 import sep3.project.jobservice.repositories.JobApplicationRepository;
 import sep3.project.jobservice.repositories.JobRepository;
 import sep3.project.jobservice.repositories.JobSeekerRepository;
@@ -28,28 +26,71 @@ public class JobApplicationServiceImpl extends JobApplicationServiceGrpc.JobAppl
     }
 
     @Override
+    public void getJobApplication(GetJobApplicationRequest request, StreamObserver<JobApplicationProto> responseObserver) {
+        log.info("GetJobApplicationRequest: {}", request);
+
+        JobApplication jobApplication = jobApplicationRepository.findById(request.getId()).orElseThrow();
+
+
+        JobApplicationProto response = JobApplicationProto.newBuilder()
+            .setId(jobApplication.getId())
+            .setStatus(jobApplication.getStatus().toString())
+            .setApplicationDate(jobApplication.getApplicationDate().toString())
+            .setJobId(jobApplication.getJob().getId())
+            .setJobSeekerId(jobApplication.getJobSeeker().getId())
+            .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void createJobApplication(CreateJobApplicationRequest request, StreamObserver<JobApplicationProto> responseObserver) {
         log.info("CreateJobApplicationRequest: {}", request);
 
         JobApplicationProto jobApplicationProto = request.getJobApplication();
+
         Job job = jobRepository.findById(jobApplicationProto.getJobId()).orElseThrow();
         JobSeeker jobSeeker = jobSeekerRepository.findById(jobApplicationProto.getJobSeekerId()).orElseThrow();
 
-        JobApplication jobApplication = JobApplication.newBuilder()
-                .setStatus(JobApplication.Status.InProgress)
-                .setJob(job)
-                .setJobSeeker(jobSeeker)
-                .build();
-
-        JobApplication savedJobApplication = jobApplicationRepository.save(jobApplication);
+        JobApplication jobApplication = jobApplicationRepository.save(JobApplication.newBuilder()
+            .setJob(job)
+            .setJobSeeker(jobSeeker)
+            .build()
+        );
 
         JobApplicationProto response = JobApplicationProto.newBuilder()
-                .setId(savedJobApplication.getId())
-                .setStatus(savedJobApplication.getStatus().toString())
-                .setApplicationDate(savedJobApplication.getApplicationDate().toString())
-                .setJobId(savedJobApplication.getJob().getId())
-                .setJobSeekerId(savedJobApplication.getJobSeeker().getId())
-                .build();
+            .setId(jobApplication.getId())
+            .setStatus(jobApplication.getStatus().toString())
+            .setApplicationDate(jobApplication.getApplicationDate().toString())
+            .setJobId(jobApplication.getJob().getId())
+            .setJobSeekerId(jobApplication.getJobSeeker().getId())
+            .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void updateJobApplication(UpdateJobApplicationRequest request, StreamObserver<JobApplicationProto> responseObserver) {
+        log.info("UpdateJobApplicationRequest: {}", request);
+
+        JobApplicationProto jobApplicationProto = request.getJobApplication();
+
+        JobApplication existingJobApplication = jobApplicationRepository.findById(jobApplicationProto.getId()).orElseThrow();
+
+        // Only the status can be updated for now
+        existingJobApplication.setStatus(JobApplication.Status.valueOf(jobApplicationProto.getStatus()));
+
+        JobApplication jobApplication = jobApplicationRepository.save(existingJobApplication);
+
+        JobApplicationProto response = JobApplicationProto.newBuilder()
+            .setId(jobApplication.getId())
+            .setStatus(jobApplication.getStatus().toString())
+            .setApplicationDate(jobApplication.getApplicationDate().toString())
+            .setJobId(jobApplication.getJob().getId())
+            .setJobSeekerId(jobApplication.getJobSeeker().getId())
+            .build();
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();

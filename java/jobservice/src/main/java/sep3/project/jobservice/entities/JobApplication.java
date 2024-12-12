@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @Entity
@@ -18,10 +18,11 @@ public class JobApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.InProgress;
     @CreatedDate
-    private final Date applicationDate = new Date();
+    private final Instant applicationDate = Instant.now();
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;

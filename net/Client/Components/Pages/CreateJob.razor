@@ -1,0 +1,137 @@
+@page "/jobs/create"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using DTOs
+@inject IJobService HttpJobService
+@rendermode InteractiveServer
+@* @attribute [Authorize(Roles = "JobProvider")] *@
+
+<PageTitle>Create Job</PageTitle>
+
+<h1 class="text-center mb-5">Create a New Job</h1>
+
+@if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+else if (success)
+{
+    <div class="alert alert-success">Job created successfully!</div>
+}
+
+<EditForm Model="Model" OnValidSubmit="HandleCreateJobAsync" Enhance class="container">
+    <DataAnnotationsValidator/>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="title" class="form-label">Job Title</label>
+            <InputText @bind-Value="Model.Title" id="title" class="form-control" placeholder="Enter job title" required/>
+            <ValidationMessage For="() => Model.Title"/>
+        </div>
+        <div class="col-md-6">
+            <label for="location" class="form-label">Location</label>
+            <InputText @bind-Value="Model.Location" id="location" class="form-control" placeholder="Enter location" required/>
+            <ValidationMessage For="() => Model.Location"/>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="description" class="form-label">Job Description</label>
+        <InputTextArea @bind-Value="Model.Description" id="description" class="form-control" rows="5" placeholder="Enter job description" required></InputTextArea>
+        <ValidationMessage For="() => Model.Description"/>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="salary" class="form-label">Salary</label>
+            <InputNumber @bind-Value="Model.Salary" id="salary" class="form-control" step="0.01" placeholder="Enter salary" required/>
+            <ValidationMessage For="() => Model.Salary"/>
+        </div>
+        <div class="col-md-4">
+            <label for="employmentType" class="form-label">Employment Type</label>
+            <InputSelect @bind-Value="Model.Type" id="employmentType" class="form-select" required>
+                <option value="">Select Type</option>
+                <option value="FullTime">Full Time</option>
+                <option value="PartTime">Part Time</option>
+                <option value="Internship">Internship</option>
+            </InputSelect>
+            <ValidationMessage For="() => Model.Type"/>
+        </div>
+        <div class="col-md-4">
+            <label for="deadline" class="form-label">Application Deadline</label>
+            <InputDate @bind-Value="Model.Deadline" id="deadline" class="form-control" required/>
+            <ValidationMessage For="() => Model.Deadline"/>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Create Job</button>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private JobDto? Model { get; set; }
+    private string? error;
+    private bool success = false;
+    private ClaimsPrincipal? user;
+    
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        InitializeJob();
+        
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            user = authState?.User;
+        }
+    }
+
+    private void InitializeJob()
+    {
+        Model = new JobDto
+        {
+            Id = 0,
+            Title = string.Empty,
+            Description = string.Empty,
+            PostingDate = DateTime.Now,
+            Deadline = DateTime.Now.AddDays(30),
+            Location = string.Empty,
+            Type = string.Empty,
+            Salary = 0.0,
+            Status = "",
+            JobProvider = new JobProviderDto()
+            {
+                // TODO: remove default id after auth is done
+                Id = long.Parse(user?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "11"),
+                Email = user?.FindFirstValue(ClaimTypes.Email) ?? "",
+                Name = user?.FindFirstValue(ClaimTypes.Name) ?? ""
+            }
+        };
+    }
+
+    private async Task HandleCreateJobAsync()
+    {
+        try
+        {
+            if (Model == null)
+            {
+                error = "Job details are missing.";
+                return;
+            }
+            
+            await HttpJobService.CreateJobAsync(Model);
+
+            success = true;
+            error = null;
+
+            InitializeJob();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            success = false;
+        }
+    }
+}

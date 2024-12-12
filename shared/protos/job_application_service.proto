@@ -8,6 +8,8 @@ option csharp_namespace = "Server.Grpc";
 service JobApplicationService {
   // A method to create a job application resource.
   rpc CreateJobApplication(CreateJobApplicationRequest) returns (JobApplicationProto);
+  rpc GetJobApplication(GetJobApplicationRequest) returns (JobApplicationProto);
+  rpc UpdateJobApplication(UpdateJobApplicationRequest) returns (JobApplicationProto);
 }
 
 // A representation of a JobApplication.
@@ -27,5 +29,13 @@ message JobApplicationProto {
 // A request to be sent when calling the CreateJobApplication method.
 message CreateJobApplicationRequest {
   // The JobApplication to create.
+  JobApplicationProto jobApplication = 1;
+}
+
+message GetJobApplicationRequest {
+  int64 id = 1;
+}
+
+message UpdateJobApplicationRequest {
   JobApplicationProto jobApplication = 1;
 }

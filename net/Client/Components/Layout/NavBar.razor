@@ -16,6 +16,13 @@
                 <li class="nav-item">
                     <NavLink class="nav-link" href="/jobs">Jobs</NavLink>
                 </li>
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="/applications">Applications</NavLink>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
             </ul>
             <div class="d-flex gap-3 align-items-center">
                 <AuthorizeView>

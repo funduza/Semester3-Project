@@ -101,7 +101,7 @@ else if (success)
             Type = string.Empty,
             Salary = 0.0,
             Status = "",
-            JobProvider = new JobProviderDto()
+            JobProvider = new UserDto()
             {
                 // TODO: remove default id after auth is done
                 Id = long.Parse(user?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "11"),

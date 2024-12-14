@@ -1,0 +1,36 @@
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+<div class="d-flex align-items-center justify-content-between w-100">
+    <div>
+        Page <strong>@(State.CurrentPageIndex + 1)</strong> of <strong>@(State.LastPageIndex + 1)</strong>
+    </div>
+    <nav>
+        <ul class="pagination justify-content-end m-0">
+            <li class="page-item">
+                <button @onclick="GoFirstAsync" disabled="@(!CanGoBack)" class="page-link">First page</button>
+            </li>
+            <li class="page-item">
+                <button @onclick="GoPreviousAsync" disabled="@(!CanGoBack)" class="page-link">Previous</button>
+            </li>
+            <li class="page-item">
+                <button @onclick="GoNextAsync" disabled="@(!CanGoForwards)" class="page-link">Next</button>
+            </li>
+            <li class="page-item">
+                <button @onclick="GoLastAsync" disabled="@(!CanGoForwards)" class="page-link">Last page</button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public PaginationState State { get; set; } = default!;
+    
+    private Task GoToPageAsync(int pageIndex) => State.SetCurrentPageIndexAsync(pageIndex);
+    private Task GoFirstAsync() => GoToPageAsync(0);
+    private Task GoPreviousAsync() => GoToPageAsync(State.CurrentPageIndex - 1);
+    private Task GoNextAsync() => GoToPageAsync(State.CurrentPageIndex + 1);
+    private Task GoLastAsync() => GoToPageAsync(State.LastPageIndex.GetValueOrDefault(0));
+
+    private bool CanGoBack => State.CurrentPageIndex > 0;
+    private bool CanGoForwards => State.CurrentPageIndex < State.LastPageIndex;
+}

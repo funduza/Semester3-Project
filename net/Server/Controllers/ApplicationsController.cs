@@ -14,7 +14,6 @@ public class ApplicationsController : ControllerBase
     {
         _jobApplicationServiceClient = jobApplicationServiceClient;
     }
-
     
     [HttpPost]
     public async Task<ActionResult<ApiResponse<JobApplicationDto>>> CreateApplicationAsync(
@@ -45,6 +44,37 @@ public class ApplicationsController : ControllerBase
         return Ok(new ApiResponse<JobApplicationDto>
         {
             Data = createdApplicationDto
+        });
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<ApiResponse<IEnumerable<JobApplicationDto>>>> GetJobApplicationsAsync(
+        [FromQuery] string pageToken = "",
+        [FromQuery] int pageSize = 12,
+        [FromQuery] string filter = ""
+    )
+    {
+        var listJobApplicationsResponse = await _jobApplicationServiceClient.ListJobApplicationsAsync(new ListJobApplicationsRequest()
+        {
+            Filter = filter,
+            PageSize = pageSize,
+            PageToken = pageToken
+        });
+
+        var jobApplicationDtos = listJobApplicationsResponse.JobApplications.Select(jobApplicationProto => new JobApplicationDto()
+        {
+            Id = jobApplicationProto.Id,
+            Status = jobApplicationProto.Status,
+            ApplicationDate = DateTimeOffset.Parse(jobApplicationProto.ApplicationDate),
+            JobId = jobApplicationProto.JobId,
+            JobSeekerId = jobApplicationProto.JobSeekerId
+        });
+
+        return Ok(new ApiResponse<IEnumerable<JobApplicationDto>>()
+        {
+            Data = jobApplicationDtos,
+            NextPageToken = listJobApplicationsResponse.NextPageToken,
+            TotalSize = listJobApplicationsResponse.TotalSize
         });
     }
     

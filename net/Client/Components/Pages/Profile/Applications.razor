@@ -1,0 +1,93 @@
+@page "/applications"
+@using System.Security.Claims
+@using DTOs
+@using Microsoft.AspNetCore.Components.QuickGrid
+@rendermode InteractiveServer
+@inject IApplicationService HttpJobApplicationService
+@attribute [Authorize(Roles = "JobProvider, JobSeeker")]
+
+<PageTitle>Job applications - Jobz</PageTitle>
+
+<div class="container py-3">
+    @if (!string.IsNullOrEmpty(_error))
+    {
+        <Alert AlertType="Alert.Type.Danger">@_error</Alert>
+    }
+    else
+    {
+        @if (_paginationState.TotalItemCount.HasValue)
+        {
+            <h1 class="mb-3 fs-3">You have <strong>@_paginationState.TotalItemCount</strong> applications</h1>
+        }
+
+        <QuickGrid ItemsProvider="_jobApplicationsProvider" Pagination="_paginationState" Class="table table-bordered table-responsive table-striped">
+            <PropertyColumn Title="Job" Property="@(p => p.JobId)"/>
+            <PropertyColumn Title="Applicant" Property="@(p => p.JobSeekerId)"/>
+            <PropertyColumn Property="@(p => p.Status)"/>
+            <PropertyColumn Title="Application Date" Property="@(p => p.ApplicationDate)" Format="dd/MM/yyyy"/>
+            <TemplateColumn Title="Actions">
+                <NavLink href="@($"/applications/{context.Id}")">View</NavLink>
+            </TemplateColumn>
+        </QuickGrid>
+        <Pagination State="_paginationState"/>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private GridItemsProvider<JobApplicationDto>? _jobApplicationsProvider;
+    private readonly PaginationState _paginationState = new()
+    {
+        ItemsPerPage = 12
+    };
+    private string? _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user is authenticated
+        if (AuthenticationState is null) return;
+        var authState = await AuthenticationState;
+        var user = authState?.User;
+        if (user?.Identity is null || !user.Identity.IsAuthenticated) return;
+
+        // Get the user's id and role
+        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var userRole = user.FindFirstValue(ClaimTypes.Role)!;
+        
+        _jobApplicationsProvider = async _ =>
+        {
+            try
+            {
+                // An RSQL filter is used to get applications for the logged in user.
+                // If the logged in user is a job provider use job.jobProvider.id==ID
+                // else if it's a job seeker use jobSeeker.id==ID
+                // where `ID` is the id of the logged in user.
+                var filter = userRole switch
+                {
+                    "JobProvider" => $"job.jobProvider.id=={userId}",
+                    "JobSeeker" => $"jobSeeker.id=={userId}",
+                    _ => throw new Exception("You don't have the required permissions.")
+                };
+
+                var response = await HttpJobApplicationService.GetJobApplicationsAsync(
+                    pageToken: _paginationState.CurrentPageIndex.ToString(),
+                    pageSize: _paginationState.ItemsPerPage,
+                    filter);
+
+                return GridItemsProviderResult.From(response.Data.ToList(), response.TotalSize);
+            }
+            catch (Exception e)
+            {
+                _error = e.Message;
+            }
+
+            // In case of errors return an empty list of items
+            return GridItemsProviderResult.From(new List<JobApplicationDto>(), 0);
+        };
+
+        // Re-render the page when total item count changes
+        _paginationState.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+    }
+}

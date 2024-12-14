@@ -8,6 +8,8 @@ option csharp_namespace = "Server.Grpc";
 service JobApplicationService {
   // A method to create a job application resource.
   rpc CreateJobApplication(CreateJobApplicationRequest) returns (JobApplicationProto);
+  // A method to get a list of job applications.
+  rpc ListJobApplications(ListJobApplicationsRequest) returns (ListJobApplicationsResponse);
   rpc GetJobApplication(GetJobApplicationRequest) returns (JobApplicationProto);
   rpc UpdateJobApplication(UpdateJobApplicationRequest) returns (JobApplicationProto);
 }
@@ -38,4 +40,33 @@ message GetJobApplicationRequest {
 
 message UpdateJobApplicationRequest {
   JobApplicationProto jobApplication = 1;
+}
+
+// A request to be sent when calling the `ListJobApplications` method.
+message ListJobApplicationsRequest {
+  // A query to filter job applications by.
+  optional string filter = 1;
+  
+  // The maximum number of job applications to return. The service may return fewer than this value.
+  // If unspecified, at most 12 job applications will be returned.
+  // The maximum value is 64; values above 64 will be coerced to 64.
+  optional int32 page_size = 2;
+
+  // A page token, received from a previous `ListJobApplications` call.
+  // Provide this to retrieve the subsequent page.
+  // If the number is invalid or not provided it will default to 0.
+  optional string page_token = 3;
+}
+
+// A response received when calling the `ListJobApplications` method.
+message ListJobApplicationsResponse {
+  // The list of job applications
+  repeated JobApplicationProto jobApplications = 1;
+
+  // A token, which can be sent as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
+
+  // The total number of items in the collection
+  int32 total_size = 3;
 }

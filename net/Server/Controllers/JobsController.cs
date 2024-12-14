@@ -1,6 +1,7 @@
 ﻿using DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Server.Grpc;
+using Server.Mapper;
 
 namespace Server.Controllers;
 
@@ -29,25 +30,18 @@ public class JobsController : ControllerBase
             PageToken = pageToken
         });
 
-        var jobsDto = listJobsResponse.Jobs.Select(job => new JobDto()
+        var jobsDto = listJobsResponse.Jobs.Select(jobProto => new JobDto()
         {
-            Id = job.Id,
-            Title = job.Title,
-            Description = job.Description,
-            PostingDate = DateTime.Parse(job.PostingDate),
-            Deadline = DateTime.Parse(job.Deadline),
-            Location = job.Location,
-            Type = job.Type,
-            Salary = job.Salary,
-            Status = job.Status,
-            JobProvider = new UserDto()
-            {
-                Id = job.JobProvider.Id,
-                Email = job.JobProvider.Email,
-                Name = job.JobProvider.JobProvider.Name,
-                Description = job.JobProvider.JobProvider.Description,
-                PhoneNumber = job.JobProvider.JobProvider.PhoneNumber,
-            }
+            Id = jobProto.Id,
+            Title = jobProto.Title,
+            Description = jobProto.Description,
+            PostingDate = DateTime.Parse(jobProto.PostingDate),
+            Deadline = DateTime.Parse(jobProto.Deadline),
+            Location = jobProto.Location,
+            Type = jobProto.Type,
+            Salary = jobProto.Salary,
+            Status = jobProto.Status,
+            JobProvider = UserMapper.ToDto(jobProto.JobProvider)
         });
 
         return Ok(new ApiResponse<IEnumerable<JobDto>>()
@@ -61,30 +55,23 @@ public class JobsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ApiResponse<JobDto>>> GetJobAsync([FromRoute] int id)
     {
-        var jobResponse = await _jobServiceClient.GetJobAsync(new GetJobRequest()
+        var jobProto = await _jobServiceClient.GetJobAsync(new GetJobRequest()
         {
             Id = id
         });
 
         var jobDto = new JobDto()
         {
-            Id = jobResponse.Id,
-            Title = jobResponse.Title,
-            Description = jobResponse.Description,
-            PostingDate = DateTime.Parse(jobResponse.PostingDate),
-            Deadline = DateTime.Parse(jobResponse.Deadline),
-            Location = jobResponse.Location,
-            Type = jobResponse.Type,
-            Salary = jobResponse.Salary,
-            Status = jobResponse.Status,
-            JobProvider = new UserDto()
-            {
-                Id = jobResponse.JobProvider.Id,
-                Email = jobResponse.JobProvider.Email,
-                Name = jobResponse.JobProvider.JobProvider.Name,
-                Description = jobResponse.JobProvider.JobProvider.Description,
-                PhoneNumber = jobResponse.JobProvider.JobProvider.PhoneNumber,
-            }
+            Id = jobProto.Id,
+            Title = jobProto.Title,
+            Description = jobProto.Description,
+            PostingDate = DateTime.Parse(jobProto.PostingDate),
+            Deadline = DateTime.Parse(jobProto.Deadline),
+            Location = jobProto.Location,
+            Type = jobProto.Type,
+            Salary = jobProto.Salary,
+            Status = jobProto.Status,
+            JobProvider = UserMapper.ToDto(jobProto.JobProvider)
         };
 
         return Ok(new ApiResponse<JobDto>()
@@ -110,14 +97,7 @@ public class JobsController : ControllerBase
                 Location = jobDto.Location,
                 Type = jobDto.Type,
                 Salary = jobDto.Salary,
-                JobProvider = new UserProto()
-                {
-                    Id = 11, // TODO: check null reference
-                    JobProvider = new JobProviderProto()
-                    {
-                        Name = jobDto.JobProvider.Name
-                    }
-                }
+                JobProvider = UserMapper.ToProto(jobDto.JobProvider)
             }
         };
 
@@ -134,10 +114,7 @@ public class JobsController : ControllerBase
             Type = jobProto.Type,
             Salary = jobProto.Salary,
             Status = jobProto.Status,
-            JobProvider = new JobProviderDto() {
-                Email = jobProto.JobProvider.Email,
-                Name = jobProto.JobProvider.JobProvider.Name,
-                }
+            JobProvider = UserMapper.ToDto(jobProto.JobProvider)
         };
 
         return Ok(new ApiResponse<JobDto>

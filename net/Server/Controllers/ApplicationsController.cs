@@ -16,7 +16,7 @@ public class ApplicationsController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<JobApplicationDto>>> CreateApplicationAsync(
+    public async Task<ActionResult<PagedResult<JobApplicationDto>>> CreateApplicationAsync(
         [FromBody] CreateJobApplicationDto createJobApplicationDto
     )
     {
@@ -41,14 +41,14 @@ public class ApplicationsController : ControllerBase
             JobSeekerId = createJobApplicationResponse.JobSeekerId
         };
         
-        return Ok(new ApiResponse<JobApplicationDto>
+        return Ok(new PagedResult<JobApplicationDto>
         {
             Data = createdApplicationDto
         });
     }
     
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<IEnumerable<JobApplicationDto>>>> GetJobApplicationsAsync(
+    public async Task<ActionResult<PagedResult<IEnumerable<JobApplicationDto>>>> GetJobApplicationsAsync(
         [FromQuery] string pageToken = "",
         [FromQuery] int pageSize = 12,
         [FromQuery] string filter = ""
@@ -70,7 +70,7 @@ public class ApplicationsController : ControllerBase
             JobSeekerId = jobApplicationProto.JobSeekerId
         });
 
-        return Ok(new ApiResponse<IEnumerable<JobApplicationDto>>()
+        return Ok(new PagedResult<IEnumerable<JobApplicationDto>>()
         {
             Data = jobApplicationDtos,
             NextPageToken = listJobApplicationsResponse.NextPageToken,
@@ -79,7 +79,7 @@ public class ApplicationsController : ControllerBase
     }
     
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ApiResponse<JobApplicationDto>>> GetApplicationAsync([FromRoute] int id)
+    public async Task<ActionResult<PagedResult<JobApplicationDto>>> GetApplicationAsync([FromRoute] int id)
     {
         var jobResponse = await _jobApplicationServiceClient.GetJobApplicationAsync(new GetJobApplicationRequest()
         {
@@ -95,7 +95,7 @@ public class ApplicationsController : ControllerBase
             JobId = jobResponse.JobId
         };
 
-        return Ok(new ApiResponse<JobApplicationDto>()
+        return Ok(new PagedResult<JobApplicationDto>()
         {
             Data = jobApplicationDto,
             TotalSize = 1
@@ -103,7 +103,7 @@ public class ApplicationsController : ControllerBase
     }
     
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ApiResponse<JobApplicationDto>>> UpdateApplicationAsync(
+    public async Task<ActionResult<PagedResult<JobApplicationDto>>> UpdateApplicationAsync(
         [FromRoute] int id,
         [FromBody] JobApplicationDto jobApplicationDto
     )
@@ -129,7 +129,7 @@ public class ApplicationsController : ControllerBase
             JobSeekerId = jobApplicationProto.JobSeekerId
         };
         
-        return Ok(new ApiResponse<JobApplicationDto>
+        return Ok(new PagedResult<JobApplicationDto>
         {
             Data = response
         });

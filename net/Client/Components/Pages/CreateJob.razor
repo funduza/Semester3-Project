@@ -1,7 +1,5 @@
 @page "/jobs/create"
 @using System.Security.Claims
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Authorization
 @using DTOs
 @inject IJobService HttpJobService
 @rendermode InteractiveServer
@@ -20,7 +18,7 @@ else if (success)
     <div class="alert alert-success">Job created successfully!</div>
 }
 
-<EditForm Model="Model" OnValidSubmit="HandleCreateJobAsync" Enhance class="container">
+<EditForm Model="Model" OnValidSubmit="OnValidSubmitAsync" Enhance class="container">
     <DataAnnotationsValidator/>
     <div class="row mb-3">
         <div class="col-md-6">
@@ -68,50 +66,54 @@ else if (success)
 </EditForm>
 
 @code {
-    [SupplyParameterFromForm]
-    private JobDto? Model { get; set; }
-    private string? error;
-    private bool success = false;
-    private ClaimsPrincipal? user;
-    
     [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+    [SupplyParameterFromForm]
+    private CreateJobDto? Model { get; set; }
+    
+    private string? error;
+    private bool success;
 
     protected override async Task OnInitializedAsync()
     {
-        InitializeJob();
-        
-        if (authenticationState is not null)
+        await ClearFormAsync();
+    }
+
+    private async Task ClearFormAsync()
+    {
+        try
         {
-            var authState = await authenticationState;
-            user = authState?.User;
+            error = null;
+            
+            // Check if user is authenticated
+            if (AuthenticationState is null) throw new Exception("You must first log in.");
+            var authState = await AuthenticationState;
+            var user = authState?.User;
+            if (user?.Identity is null || !user.Identity.IsAuthenticated) throw new Exception("You must first log in.");
+            var jobProviderId = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            Model = new CreateJobDto()
+            {
+                Title = string.Empty,
+                Description = string.Empty,
+                Deadline = DateTimeOffset.Now,
+                Location = string.Empty,
+                Type = string.Empty,
+                Salary = 0,
+                JobProviderId = long.Parse(jobProviderId)
+            };
+        }
+        catch (FormatException)
+        {
+            error = "An error occurred, try to log out and log in again.";
+        }
+        catch (Exception e)
+        {
+            error = e.Message;
         }
     }
 
-    private void InitializeJob()
-    {
-        Model = new JobDto
-        {
-            Id = 0,
-            Title = string.Empty,
-            Description = string.Empty,
-            PostingDate = DateTime.Now,
-            Deadline = DateTime.Now.AddDays(30),
-            Location = string.Empty,
-            Type = string.Empty,
-            Salary = 0.0,
-            Status = "",
-            JobProvider = new UserDto()
-            {
-                // TODO: remove default id after auth is done
-                Id = long.Parse(user?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "11"),
-                Email = user?.FindFirstValue(ClaimTypes.Email) ?? "",
-                Name = user?.FindFirstValue(ClaimTypes.Name) ?? ""
-            }
-        };
-    }
-
-    private async Task HandleCreateJobAsync()
+    private async Task OnValidSubmitAsync()
     {
         try
         {
@@ -126,7 +128,7 @@ else if (success)
             success = true;
             error = null;
 
-            InitializeJob();
+            await ClearFormAsync();
         }
         catch (Exception ex)
         {

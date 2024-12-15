@@ -1,0 +1,24 @@
+@Host = https://localhost:7267
+
+### Create a job
+POST {{Host}}/jobs
+Content-Type: application/json
+
+{
+  "title": "test",
+  "description": "test",
+  "deadline": "2025-01-01T00:00:00Z",
+  "location": "test",
+  "salary": 1000,
+  "type": "FullTime",
+  "jobProviderId": 11
+}
+
+### Get a list of jobs
+GET {{Host}}/jobs
+
+### Get a list of jobs matching the filter
+GET {{Host}}/jobs?filter=title=ilike=banking
+
+### Get a single job
+GET {{Host}}/jobs/1

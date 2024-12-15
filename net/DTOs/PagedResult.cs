@@ -1,8 +1,8 @@
 namespace DTOs;
 
-public class ApiResponse<T>
+public class PagedResult<T>
 {
     public required T Data { get; set; }
     public string? NextPageToken { get; set; }
-    public int TotalSize { get; set; }
+    public long TotalSize { get; set; }
 }

@@ -1,9 +1,27 @@
 @Host = localhost:9090
 
-### JobService health
+### Service health
 GRPC {{Host}}/grpc.health.v1.Health/Check
 
-### Get a list of all jobs
+### Create a job
+GRPC {{Host}}/JobService/CreateJob
+Content-Type: application/json
+
+{
+  "job": {
+    "title": "test",
+    "description": "test",
+    "deadline": "2025-01-01T00:00:00Z",
+    "location": "test",
+    "salary": 3000,
+    "type": "PartTime",
+    "jobProvider": {
+      "id": 11
+    }
+  }
+}
+
+### Get a list of jobs
 GRPC {{Host}}/JobService/ListJobs
 
 ### Get a list of jobs matching the filter
@@ -11,10 +29,11 @@ GRPC {{Host}}/JobService/ListJobs
 Content-Type: application/json
 
 {
-  "filter": "title==^*leg*;salary>100;status==Active"
+  "filter": "title=ilike=banking",
+  "page_size": 2
 }
 
-### Get a single job with id 1
+### Get a single job
 GRPC {{Host}}/JobService/GetJob
 Content-Type: application/json
 

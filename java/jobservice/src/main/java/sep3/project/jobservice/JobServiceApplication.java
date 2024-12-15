@@ -68,11 +68,10 @@ public class JobServiceApplication {
                 Job job = Job.newBuilder()
                         .setTitle(faker.job().title())
                         .setDescription(String.join("\n", faker.lorem().paragraphs(faker.number().numberBetween(3, 7))))
-                        .setPostingDate(faker.date().past(100, TimeUnit.DAYS))
-                        .setDeadline(faker.date().future(100, TimeUnit.DAYS))
+                        .setDeadline(faker.date().future(100, TimeUnit.DAYS).toInstant())
                         .setLocation(faker.address().fullAddress())
                         .setType(Job.Type.values()[faker.random().nextInt(Job.Type.values().length)])
-                        .setSalary(faker.number().randomDouble(2, 5000, 50000))
+                        .setSalary(faker.number().randomDigitNotZero())
                         .setStatus(Job.Status.values()[faker.random().nextInt(Job.Status.values().length)])
                         .setJobProvider(savedJobProviders.get(faker.random().nextInt(jobProviders.size())))
                         .build();

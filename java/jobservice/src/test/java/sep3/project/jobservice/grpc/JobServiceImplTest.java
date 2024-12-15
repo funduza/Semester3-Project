@@ -3,6 +3,7 @@ package sep3.project.jobservice.grpc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.google.protobuf.Timestamp;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,8 +17,11 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import sep3.project.jobservice.entities.Job;
 import sep3.project.jobservice.entities.JobProvider;
+import sep3.project.jobservice.repositories.JobProviderRepository;
 import sep3.project.jobservice.repositories.JobRepository;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -26,6 +30,9 @@ public class JobServiceImplTest {
     @Mock
     private JobRepository jobRepository;
 
+    @Mock
+    private JobProviderRepository jobProviderRepository;
+
     @InjectMocks
     private JobServiceImpl jobServiceImpl;
 
@@ -33,6 +40,54 @@ public class JobServiceImplTest {
     public void testJobServiceImplInitialization() {
         assertNotNull(jobServiceImpl);
         assertNotNull(jobRepository);
+    }
+
+    @Test
+    public void testCreateJob() throws Exception {
+        // Arrange
+        Job testJob = getJob();
+        JobProto testJobProto = JobProto.newBuilder()
+                .setId(testJob.getId())
+                .setTitle(testJob.getTitle())
+                .setDescription(testJob.getDescription())
+                .setPostingDate(Timestamp.newBuilder()
+                        .setSeconds(testJob.getPostingDate().getEpochSecond())
+                        .setNanos(testJob.getPostingDate().getNano())
+                        .build())
+                .setDeadline(Timestamp.newBuilder()
+                        .setSeconds(testJob.getDeadline().getEpochSecond())
+                        .setNanos(testJob.getDeadline().getNano())
+                        .build())
+                .setLocation(testJob.getLocation())
+                .setSalary(testJob.getSalary())
+                .setType(testJob.getType().toString())
+                .setStatus(testJob.getStatus().toString())
+                .setJobProvider(UserProto.newBuilder()
+                        .setId(testJob.getJobProvider().getId())
+                        .setEmail(testJob.getJobProvider().getEmail())
+                        .setRole(testJob.getJobProvider().getRole().toString())
+                        .setJobProvider(JobProviderProto.newBuilder()
+                                .setName(testJob.getJobProvider().getName())
+                                .setDescription(testJob.getJobProvider().getDescription())
+                                .setPhoneNumber(testJob.getJobProvider().getPhoneNumber())
+                                .build())
+                        .build())
+                .build();
+        when(jobRepository.save(any(Job.class))).thenReturn(testJob);
+        when(jobProviderRepository.findById(testJob.getJobProvider().getId())).thenReturn(Optional.of(testJob.getJobProvider()));
+
+        StreamRecorder<JobProto> response = StreamRecorder.create();
+
+        // Act
+        jobServiceImpl.createJob(CreateJobRequest.newBuilder().setJob(testJobProto).build(), response);
+
+        // Assert
+        assertNull(response.getError());
+        assertEquals(1, response.getValues().size());
+        assertEquals(testJob.getId(), response.firstValue().get().getId());
+
+        verify(jobRepository, times(1)).save(any(Job.class));
+        verify(jobProviderRepository, times(1)).findById(testJob.getJobProvider().getId());
     }
 
     @ParameterizedTest(name = "{index} => pageSize={0}, pageToken={1}, expectedJobsCount={2}")
@@ -84,6 +139,11 @@ public class JobServiceImplTest {
         verify(jobRepository, times(2)).findById(anyLong());
     }
 
+    /**
+     * Helper method to get a test job provider.
+     * @param id The entity identifier
+     * @return The test job provider
+     */
     private JobProvider getJobProvider(long id) {
         return JobProvider.newBuilder()
                 .setId(id)
@@ -95,25 +155,36 @@ public class JobServiceImplTest {
                 .build();
     }
 
+    /**
+     * Helper method to get a test job provider with a default id of 1.
+     * @return The test job provider
+     */
     private JobProvider getJobProvider() {
         return getJobProvider(1L);
     }
 
+    /**
+     * Helper method to get a test job.
+     * @param id The entity identifier
+     * @return The test job
+     */
     private Job getJob(long id) {
         return Job.newBuilder()
                 .setId(id)
                 .setTitle("test")
                 .setDescription("test")
-                .setPostingDate(new Date())
-                .setDeadline(new Date())
+                .setDeadline(Instant.now().plus(30, ChronoUnit.DAYS))
                 .setLocation("test")
+                .setSalary(1000)
                 .setType(Job.Type.FullTime)
-                .setSalary(1000.0)
-                .setStatus(Job.Status.Active)
                 .setJobProvider(getJobProvider(id))
                 .build();
     }
 
+    /**
+     * Helper method to get a test job with a default id of 1.
+     * @return The test job
+     */
     private Job getJob() {
         return getJob(1L);
     }

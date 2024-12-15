@@ -2,14 +2,14 @@
 
 public class JobDto
 {
-    public required long Id { get; set; }
-    public required string Title { get; set; }
-    public required string Description { get; set; } 
-    public required DateTime PostingDate { get; set; }
-    public required DateTime Deadline { get; set; } 
-    public required string Location { get; set; }
-    public required string Type { get; set; }
-    public required double Salary { get; set; }
-    public required string Status { get; set; }
-    public required UserDto JobProvider { get; set; }
+    public long Id { get; set; }
+    public string? Title { get; set; }
+    public string? Description { get; set; } 
+    public DateTimeOffset PostingDate { get; set; }
+    public DateTimeOffset Deadline { get; set; } 
+    public string? Location { get; set; }
+    public string? Type { get; set; }
+    public int Salary { get; set; }
+    public string? Status { get; set; }
+    public UserDto? JobProvider { get; set; }
 }

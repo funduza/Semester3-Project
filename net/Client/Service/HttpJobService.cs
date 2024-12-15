@@ -4,16 +4,21 @@ using System.Net.Http.Json;
 
 namespace Client.Service;
 
-public class HttpJobService : IJobService
+public class HttpJobService(HttpClient httpClient) : IJobService
 {
-    private readonly HttpClient httpClient;
-
-    public HttpJobService(HttpClient httpClient)
+    public async Task<JobDto> CreateJobAsync(CreateJobDto createJobDto)
     {
-        this.httpClient = httpClient;
+        var httpResponse = await httpClient.PostAsJsonAsync("jobs", createJobDto);
+        var httpRequestException = new HttpRequestException("Something went wrong, refresh the page or try again later.");
+
+        if (!httpResponse.IsSuccessStatusCode) throw httpRequestException;
+
+        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<JobDto>();
+
+        return apiResponse ?? throw httpRequestException;
     }
 
-    public async Task<ApiResponse<IEnumerable<JobDto>>> GetJobsAsync(string pageToken = "", int pageSize = 12, string filter = "")
+    public async Task<PagedResult<IEnumerable<JobDto>>> GetJobsAsync(string pageToken = "", int pageSize = 12, string filter = "")
     {
         var requestUri = QueryHelpers.AddQueryString("jobs", new Dictionary<string, string?>
         {
@@ -27,57 +32,20 @@ public class HttpJobService : IJobService
 
         if (!httpResponse.IsSuccessStatusCode) throw httpRequestException;
 
-        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<JobDto>>>();
+        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<PagedResult<IEnumerable<JobDto>>>();
 
         return apiResponse ?? throw httpRequestException;
     }
     
-    public async Task<ApiResponse<JobDto>> GetJobAsync(int id)
+    public async Task<JobDto> GetJobAsync(long id)
     {
-        var requestUri = $"jobs/{id}";
-
-        var httpResponse = await httpClient.GetAsync(requestUri);
+        var httpResponse = await httpClient.GetAsync($"jobs/{id}");
         var httpRequestException = new HttpRequestException("Something went wrong, refresh the page or try again later.");
 
         if (!httpResponse.IsSuccessStatusCode) throw httpRequestException;
 
-        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<JobDto>>();
+        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<JobDto>();
 
         return apiResponse ?? throw httpRequestException;
-    }
-    
-    public async Task<ApiResponse<JobDto>> CreateJobAsync(JobDto job)
-    {
-        var httpResponse = await httpClient.PostAsJsonAsync("jobs", job);
-
-        if (!httpResponse.IsSuccessStatusCode)
-        {
-            var errorContent = await httpResponse.Content.ReadAsStringAsync();
-            throw new HttpRequestException($"Failed to create job: {errorContent}");
-        }
-
-        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<JobDto>>();
-
-        return apiResponse ?? throw new HttpRequestException("Invalid response from the server.");
-    }
-
-    public async Task<ApiResponse<JobApplicationDto>> ApplyJobAsync(int id, JobApplicationDto applyJobRequest)
-    {
-        if (applyJobRequest == null)
-        {
-            throw new ArgumentNullException(nameof(applyJobRequest), "ApplyJobRequest cannot be null.");
-        }
-
-        var httpResponse = await httpClient.PostAsJsonAsync("jobapplications/apply", applyJobRequest);
-
-        if (!httpResponse.IsSuccessStatusCode)
-        {
-            var errorContent = await httpResponse.Content.ReadAsStringAsync();
-            throw new HttpRequestException($"Failed to apply for job: {errorContent}");
-        }
-
-        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<JobApplicationDto>>();
-
-        return apiResponse ?? throw new HttpRequestException("Invalid response from the server.");
     }
 }

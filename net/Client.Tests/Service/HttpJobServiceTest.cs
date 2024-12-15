@@ -15,11 +15,12 @@ public class HttpJobServiceTest
     public async Task GetJobsAsync_Success()
     {
         // Arrange
-        var mockDelegatingHandler = MockDelegatingHandler(HttpStatusCode.OK, new ApiResponse<IEnumerable<JobDto>>()
+        var testJobDto = GetJobDto();
+        var mockDelegatingHandler = MockDelegatingHandler(HttpStatusCode.OK, new PagedResult<IEnumerable<JobDto>>()
         {
             Data = new List<JobDto>()
             {
-                GetJobDto()
+                testJobDto
             },
             NextPageToken = string.Empty,
             TotalSize = 1
@@ -31,12 +32,12 @@ public class HttpJobServiceTest
 
         // Assert
         Assert.NotNull(apiResponse);
-        Assert.IsType<ApiResponse<IEnumerable<JobDto>>>(apiResponse);
+        Assert.IsType<PagedResult<IEnumerable<JobDto>>>(apiResponse);
         var jobs = apiResponse.Data.ToList();
         Assert.NotNull(jobs);
         Assert.NotEmpty(jobs);
         Assert.Single(jobs);
-        Assert.Equal("Job 1", jobs.First().Title);
+        Assert.Equal(testJobDto.Title, jobs.First().Title);
         
         mockDelegatingHandler.Protected()
             .Verify<Task<HttpResponseMessage>>(
@@ -70,22 +71,17 @@ public class HttpJobServiceTest
     public async Task GetJobAsync_Success()
     {
         // Arrange
-        var mockDelegatingHandler = MockDelegatingHandler(HttpStatusCode.OK, new ApiResponse<JobDto>()
-        {
-            Data = GetJobDto(),
-            NextPageToken = string.Empty,
-            TotalSize = 1
-        });
+        var testJobDto = GetJobDto();
+        var mockDelegatingHandler = MockDelegatingHandler(HttpStatusCode.OK, testJobDto);
         var httpJobService = CreateMockedService(mockDelegatingHandler);
         
         //Act
-        var apiResponse = await httpJobService.GetJobAsync(1);
+        var jobDto = await httpJobService.GetJobAsync(1);
         
         //Assert
-        Assert.NotNull(apiResponse);
-        Assert.IsType<ApiResponse<JobDto>>(apiResponse);
-        var job = apiResponse.Data;
-        Assert.Equal("Job 1", job.Title);
+        Assert.NotNull(jobDto);
+        Assert.IsType<JobDto>(jobDto);
+        Assert.Equal(testJobDto.Title, jobDto.Title);
         
         mockDelegatingHandler.Protected()
             .Verify<Task<HttpResponseMessage>>(
@@ -97,7 +93,6 @@ public class HttpJobServiceTest
     }
 
     [Fact]
-
     public async Task GetJobAsync_Exception()
     {
         // Arrange
@@ -122,12 +117,12 @@ public class HttpJobServiceTest
         {
             Id = 1,
             Deadline = DateTime.Today,
-            Description = "Job 1",
-            Location = "Test Location",
+            Description = "test",
+            Location = "test",
             Salary = 1000,
             Status = "Active",
-            Title = "Job 1",
-            Type = "s",
+            Title = "test",
+            Type = "FullTime",
             PostingDate = DateTime.Today,
             JobProvider = new UserDto()
             {

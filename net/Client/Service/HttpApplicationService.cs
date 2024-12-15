@@ -5,7 +5,19 @@ namespace Client.Service;
 
 public class HttpApplicationService(HttpClient httpClient) : IApplicationService
 {
-    public async Task<ApiResponse<IEnumerable<JobApplicationDto>>> GetJobApplicationsAsync(string pageToken = "", int pageSize = 12, string filter = "")
+    public async Task<JobApplicationDto> CreateJobApplicationAsync(CreateJobApplicationDto createJobApplicationDto)
+    {
+        var httpResponse = await httpClient.PostAsJsonAsync("applications", createJobApplicationDto);
+        var httpRequestException = new HttpRequestException("Something went wrong, refresh the page or try again later.");
+
+        if (!httpResponse.IsSuccessStatusCode) throw httpRequestException;
+
+        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<JobApplicationDto>();
+
+        return apiResponse ?? throw httpRequestException;
+    }
+
+    public async Task<PagedResult<IEnumerable<JobApplicationDto>>> GetJobApplicationsAsync(string pageToken = "", int pageSize = 12, string filter = "")
     {
         var requestUri = QueryHelpers.AddQueryString("applications", new Dictionary<string, string?>
         {
@@ -19,19 +31,19 @@ public class HttpApplicationService(HttpClient httpClient) : IApplicationService
 
         if (!httpResponse.IsSuccessStatusCode) throw httpRequestException;
 
-        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<JobApplicationDto>>>();
+        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<PagedResult<IEnumerable<JobApplicationDto>>>();
 
         return apiResponse ?? throw httpRequestException;
     }
     
-    public async Task<ApiResponse<JobApplicationDto>> GetApplicationAsync(long id)
+    public async Task<PagedResult<JobApplicationDto>> GetApplicationAsync(long id)
     {
         var httpResponse = await httpClient.GetAsync($"applications/{id}");
         var httpRequestException = new HttpRequestException("Something went wrong, refresh the page or try again later.");
 
         if (!httpResponse.IsSuccessStatusCode) throw httpRequestException;
 
-        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<JobApplicationDto>>();
+        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<PagedResult<JobApplicationDto>>();
 
         return apiResponse ?? throw httpRequestException;
     }

@@ -76,7 +76,7 @@
                     pageSize: _paginationState.ItemsPerPage,
                     filter);
 
-                return GridItemsProviderResult.From(response.Data.ToList(), response.TotalSize);
+                return GridItemsProviderResult.From(response.Data.ToList(), Convert.ToInt32(response.TotalSize));
             }
             catch (Exception e)
             {

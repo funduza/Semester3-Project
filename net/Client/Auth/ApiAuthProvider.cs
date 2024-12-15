@@ -59,7 +59,7 @@ public class ApiAuthProvider : AuthenticationStateProvider
         List<Claim> claims =
         [
             new(ClaimTypes.NameIdentifier, $"{userDto.Id}"),
-            new(ClaimTypes.Email, userDto.Email),
+            new(ClaimTypes.Email, $"{userDto.Email}"),
             new(ClaimTypes.Role, $"{userDto.Role}")
         ];
 

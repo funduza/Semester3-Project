@@ -22,3 +22,11 @@ GET {{Host}}/jobs?filter=title=ilike=banking
 
 ### Get a single job
 GET {{Host}}/jobs/1
+
+### Update a job
+PUT {{Host}}/jobs/1
+Content-Type: application/json
+
+{
+  "status" : "Closed"
+}

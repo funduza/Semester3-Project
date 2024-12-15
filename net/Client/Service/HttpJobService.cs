@@ -48,4 +48,16 @@ public class HttpJobService(HttpClient httpClient) : IJobService
 
         return apiResponse ?? throw httpRequestException;
     }
+
+    public async Task<JobDto> UpdateJobAsync(long id, UpdateJobDto updateJobDto)
+    {
+        var httpResponse = await httpClient.PutAsJsonAsync($"jobs/{id}", updateJobDto);
+        var httpRequestException = new HttpRequestException("Something went wrong, refresh the page or try again later.");
+
+        if (!httpResponse.IsSuccessStatusCode) throw httpRequestException;
+
+        var apiResponse = await httpResponse.Content.ReadFromJsonAsync<JobDto>();
+
+        return apiResponse ?? throw httpRequestException;
+    }
 }

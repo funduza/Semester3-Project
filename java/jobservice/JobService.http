@@ -40,3 +40,12 @@ Content-Type: application/json
 {
   "id": 1
 }
+
+### Update a job
+GRPC {{Host}}/JobService/UpdateJob
+Content-Type: application/json
+
+{
+  "id" : 1,
+  "status" : "Closed"
+}

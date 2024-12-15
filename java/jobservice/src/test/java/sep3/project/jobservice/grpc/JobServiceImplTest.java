@@ -139,6 +139,34 @@ public class JobServiceImplTest {
         verify(jobRepository, times(2)).findById(anyLong());
     }
 
+    @Test
+    public void testUpdateJob() throws Exception {
+        // Arrange
+        Job testJob = getJob();
+        when(jobRepository.findById(testJob.getId())).thenReturn(Optional.of(testJob));
+        when(jobRepository.save(any(Job.class))).thenReturn(testJob);
+
+        StreamRecorder<JobProto> response = StreamRecorder.create();
+
+        // Act
+        jobServiceImpl.updateJob(UpdateJobRequest.newBuilder()
+                .setId(testJob.getId())
+                .setStatus(Job.Status.Closed.toString())
+                .build(),
+                response
+        );
+
+        // Assert
+        assertNull(response.getError());
+        assertEquals(1, response.getValues().size());
+        assertEquals(testJob.getId(), response.firstValue().get().getId());
+        assertEquals(Job.Status.Closed.toString(), response.firstValue().get().getStatus());
+
+        assertThrows(NoSuchElementException.class, () -> jobServiceImpl.updateJob(UpdateJobRequest.newBuilder().setId(2).build(), response));
+        verify(jobRepository, times(1)).findById(testJob.getId());
+        verify(jobRepository, times(1)).save(any(Job.class));
+    }
+
     /**
      * Helper method to get a test job provider.
      * @param id The entity identifier

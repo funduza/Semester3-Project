@@ -1,4 +1,4 @@
-﻿@page "/jobs/{id:int}"
+﻿@page "/jobs/{id:long}"
 @using System.Security.Claims
 @using DTOs
 @inject IJobService HttpJobService
@@ -24,20 +24,50 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title">@job.Title</h2>
-                <h5 class="card-subtitle mb-2 text-muted">Example Company</h5>
+                <h5 class="card-subtitle mb-2 text-body-secondary">
+                    <span>@job.JobProvider.Name</span>
+                    <span>, @job.JobProvider.Email</span>
+                    <span>, @job.JobProvider.PhoneNumber</span>
+                </h5>
                 <p class="card-text">@job.Description</p>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Location:</strong> @job.Location</li>
-                    <li class="list-group-item"><strong>Type:</strong> @job.Type</li>
-                    <li class="list-group-item"><strong>Salary:</strong> @job.Salary.ToString("C") / month</li>
-                    <li class="list-group-item"><strong>Posting Date:</strong> @job.PostingDate.ToString("dd MMM. yyyy")
-                    </li>
-                    <li class="list-group-item"><strong>Deadline:</strong> @job.Deadline.ToString("dd MMM. yyyy")</li>
-                </ul>
-                <a href="/jobs" class="btn btn-primary mt-3">Back to Jobs</a>
-                <button class="btn btn-success mt-3" @onclick="ApplyToJobAsync" disabled="@(!string.IsNullOrEmpty(success))">
-                    Apply for this Job
-                </button>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Posting Date:</strong> @job.PostingDate.ToString("dd MMM. yyyy")</li>
+                <li class="list-group-item"><strong>Deadline:</strong> @job.Deadline.ToString("dd MMM. yyyy")</li>
+                <li class="list-group-item"><strong>Location:</strong> @job.Location</li>
+                <li class="list-group-item"><strong>Salary:</strong> @job.Salary.ToString("C") / month</li>
+                <li class="list-group-item"><strong>Type:</strong> @job.Type</li>
+                <li class="list-group-item">
+                    <AuthorizeView Roles="JobProvider">
+                        <Authorized>
+                            @if (_currentUserId is null || _currentUserId != job.JobProvider.Id)
+                            {
+                                <strong>Status: </strong>@job.Status
+                            }
+                            else
+                            {
+                                <label for="status"><strong>Status: </strong></label>
+                                <select @bind="job.Status" @bind:after="UpdateJobStatusAsync" id="status" class="form-select">
+                                    <option value="Active" selected="@job.Status.Equals("Active")">Active</option>
+                                    <option value="Closed" selected="@job.Status.Equals("Closed")">Closed</option>
+                                </select>
+                            }
+                        </Authorized>
+                        <NotAuthorized>
+                            <strong>Status: </strong>@job.Status
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </li>
+            </ul>
+            <div class="card-body">
+                <a href="/jobs" class="btn btn-outline-secondary mt-3">Back to Jobs</a>
+                <AuthorizeView Roles="JobSeeker">
+                    <Authorized>
+                        <button class="btn btn-primary mt-3" @onclick="ApplyToJobAsync" disabled="@(!string.IsNullOrEmpty(success))">
+                            Apply for this Job
+                        </button>
+                    </Authorized>
+                </AuthorizeView>
             </div>
         </div>
     }
@@ -46,14 +76,27 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? AuthenticationState { get; set; }
-    [Parameter] public int Id { get; set; }
+    [Parameter] public long Id { get; set; }
 
     private JobDto? job;
+    private long? _currentUserId;
     private string? success;
     private string? error;
 
     protected override async Task OnInitializedAsync()
     {
+        if (AuthenticationState is not null)
+        {
+            var authState = await AuthenticationState!;
+            var user = authState?.User;
+
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
+                _currentUserId = long.TryParse(userId, out var id) ? id : null;
+            }
+        }
+
         try
         {
             job = await HttpJobService.GetJobAsync(Id);
@@ -70,30 +113,43 @@
         {
             error = null;
 
-            // Check if user is authenticated
-            if (AuthenticationState is null) throw new Exception("You must first log in.");
-            var authState = await AuthenticationState;
-            var user = authState?.User;
-            if (user?.Identity is null || !user.Identity.IsAuthenticated) throw new Exception("You must first log in.");
-            var jobSeekerId = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
-
             await HttpApplicationService.CreateJobApplicationAsync(new CreateJobApplicationDto()
             {
                 JobId = Id,
-                JobSeekerId = long.Parse(jobSeekerId)
+                JobSeekerId = _currentUserId ?? throw new Exception("An error occurred, try to log out and log in again.")
             });
 
             success = "Applied for job successfully.";
-        }
-        catch (FormatException)
-        {
-            success = null;
-            error = "An error occurred, try to log out and log in again.";
         }
         catch (Exception ex)
         {
             success = null;
             error = ex.Message;
+        }
+    }
+
+    private async Task UpdateJobStatusAsync()
+    {
+        try
+        {
+            error = null;
+
+            if (_currentUserId is null || _currentUserId != job.JobProvider.Id)
+            {
+                throw new Exception("You are not allowed to perform this action.");
+            }
+
+            await HttpJobService.UpdateJobAsync(Id, new UpdateJobDto()
+            {
+                Status = job?.Status ?? ""
+            });
+
+            success = "The status updated successfully.";
+        }
+        catch (Exception e)
+        {
+            success = null;
+            error = e.Message;
         }
     }
 }

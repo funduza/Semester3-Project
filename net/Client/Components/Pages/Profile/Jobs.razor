@@ -1,12 +1,11 @@
-@page "/profile/applications"
+@page "/profile/jobs"
 @using System.Security.Claims
 @using DTOs
 @using Microsoft.AspNetCore.Components.QuickGrid
 @rendermode InteractiveServer
-@inject IApplicationService HttpJobApplicationService
-@attribute [Authorize(Roles = "JobProvider, JobSeeker")]
+@inject IJobService HttpJobService
+@attribute [Authorize(Roles = "JobProvider")]
 
-<PageTitle>Job applications - Jobz</PageTitle>
 
 <div class="container py-3">
     @if (!string.IsNullOrEmpty(_error))
@@ -17,27 +16,31 @@
     {
         @if (_paginationState.TotalItemCount.HasValue)
         {
-            <h1 class="mb-3 fs-3">You have <strong>@_paginationState.TotalItemCount</strong> applications</h1>
+            <h1 class="mb-3 fs-3">You have <strong>@_paginationState.TotalItemCount</strong> jobs</h1>
         }
 
-        <QuickGrid ItemsProvider="_jobApplicationsProvider" Pagination="_paginationState" Class="table table-bordered table-responsive table-striped">
-            <PropertyColumn Title="Job" Property="@(p => p.JobId)"/>
-            <PropertyColumn Title="Applicant" Property="@(p => p.JobSeekerId)"/>
-            <PropertyColumn Property="@(p => p.Status)"/>
-            <PropertyColumn Title="Application Date" Property="@(p => p.ApplicationDate)" Format="dd/MM/yyyy"/>
+        <QuickGrid ItemsProvider="_jobsProvider" Pagination="_paginationState" Class="table table-bordered table-responsive table-striped">
+            <PropertyColumn Property="@(job => job.Title)" Title="Job Title" />
+            <PropertyColumn Property="@(job => job.PostingDate)" Format="yyyy-MM-dd" Title="Posted On" />
+            <PropertyColumn Property="@(job => job.Deadline)" Format="yyyy-MM-dd" Title="Deadline" />
+            <PropertyColumn Property="@(job => job.Location)" Title="Location" />
+            <PropertyColumn Property="@(job => job.Salary)" Title="Salary" />
+            <PropertyColumn Property="@(job => job.Type)" Title="Type" />
+            <PropertyColumn Property="@(job => job.Status)" Title="Status" />
             <TemplateColumn Title="Actions">
-                <NavLink href="@($"/profile/applications/{context.Id}")">View</NavLink>
+                <NavLink href="@($"/jobs/{context.Id}")">View</NavLink>
             </TemplateColumn>
         </QuickGrid>
-        <Pagination State="_paginationState"/>
+        <Pagination State="_paginationState" />
     }
 </div>
 
-@code {
+@code
+{
     [CascadingParameter]
     private Task<AuthenticationState>? AuthenticationState { get; set; }
 
-    private GridItemsProvider<JobApplicationDto>? _jobApplicationsProvider;
+    private GridItemsProvider<JobDto>? _jobsProvider;
     private readonly PaginationState _paginationState = new()
     {
         ItemsPerPage = 12
@@ -56,22 +59,18 @@
         var userId = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
         var userRole = user.FindFirstValue(ClaimTypes.Role)!;
         
-        _jobApplicationsProvider = async _ =>
+        _jobsProvider = async _ =>
         {
             try
             {
                 // An RSQL filter is used to get applications for the logged in user.
-                // If the logged in user is a job provider use job.jobProvider.id==ID
-                // else if it's a job seeker use jobSeeker.id==ID
-                // where `ID` is the id of the logged in user.
                 var filter = userRole switch
                 {
-                    "JobProvider" => $"job.jobProvider.id=={userId}",
-                    "JobSeeker" => $"jobSeeker.id=={userId}",
+                    "JobProvider" => $"jobProvider.id=={userId}",
                     _ => throw new Exception("You don't have the required permissions.")
                 };
 
-                var response = await HttpJobApplicationService.GetJobApplicationsAsync(
+                var response = await HttpJobService.GetJobsAsync(
                     pageToken: _paginationState.CurrentPageIndex.ToString(),
                     pageSize: _paginationState.ItemsPerPage,
                     filter);
@@ -84,7 +83,7 @@
             }
 
             // In case of errors return an empty list of items
-            return GridItemsProviderResult.From(new List<JobApplicationDto>(), 0);
+            return GridItemsProviderResult.From(new List<JobDto>(), 0);
         };
 
         // Re-render the page when total item count changes

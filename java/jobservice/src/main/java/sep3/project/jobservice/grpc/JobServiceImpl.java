@@ -73,6 +73,7 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
                 .setType(savedJob.getType().toString())
                 .setStatus(savedJob.getStatus().toString())
                 .setJobProvider(UserProto.newBuilder()
+                        .setId(job.getJobProvider().getId())
                         .setEmail(savedJob.getJobProvider().getEmail())
                         .setRole(savedJob.getJobProvider().getRole().toString())
                         .setJobProvider(JobProviderProto.newBuilder()
@@ -126,6 +127,7 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
                         .setType(job.getType().toString())
                         .setStatus(job.getStatus().toString())
                         .setJobProvider(UserProto.newBuilder()
+                                .setId(job.getJobProvider().getId())
                                 .setEmail(job.getJobProvider().getEmail())
                                 .setRole(job.getJobProvider().getRole().toString())
                                 .setJobProvider(JobProviderProto.newBuilder()
@@ -179,6 +181,56 @@ public class JobServiceImpl extends JobServiceGrpc.JobServiceImplBase {
                 .setType(job.getType().toString())
                 .setStatus(job.getStatus().toString())
                 .setJobProvider(UserProto.newBuilder()
+                        .setId(job.getJobProvider().getId())
+                        .setEmail(job.getJobProvider().getEmail())
+                        .setRole(job.getJobProvider().getRole().toString())
+                        .setJobProvider(JobProviderProto.newBuilder()
+                                .setName(job.getJobProvider().getName())
+                                .setDescription(job.getJobProvider().getDescription())
+                                .setPhoneNumber(job.getJobProvider().getPhoneNumber())
+                                .build())
+                        .build())
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    /**
+     * A method used to update a job.
+     * @param request The request containing details about the job.
+     * @param responseObserver The stream observer for sending the response.
+     * @throws java.util.NoSuchElementException If the job cannot be found by ID.
+     */
+    @Override
+    public void updateJob(UpdateJobRequest request, StreamObserver<JobProto> responseObserver) {
+        log.info("UpdateJobRequest: {}", request);
+
+        Job existingJob = jobRepository.findById(request.getId()).orElseThrow();
+
+        // Update the job status
+        existingJob.setStatus(Job.Status.valueOf(request.getStatus()));
+
+        Job job = jobRepository.save(existingJob);
+
+        JobProto response = JobProto.newBuilder()
+                .setId(job.getId())
+                .setTitle(job.getTitle())
+                .setDescription(job.getDescription())
+                .setPostingDate(Timestamp.newBuilder()
+                        .setSeconds(job.getPostingDate().getEpochSecond())
+                        .setNanos(job.getPostingDate().getNano())
+                        .build())
+                .setDeadline(Timestamp.newBuilder()
+                        .setSeconds(job.getDeadline().getEpochSecond())
+                        .setNanos(job.getDeadline().getNano())
+                        .build())
+                .setLocation(job.getLocation())
+                .setSalary(job.getSalary())
+                .setType(job.getType().toString())
+                .setStatus(job.getStatus().toString())
+                .setJobProvider(UserProto.newBuilder()
+                        .setId(job.getJobProvider().getId())
                         .setEmail(job.getJobProvider().getEmail())
                         .setRole(job.getJobProvider().getRole().toString())
                         .setJobProvider(JobProviderProto.newBuilder()

@@ -16,7 +16,7 @@ public class HttpJobServiceTest
     {
         // Arrange
         var testJobDto = GetJobDto();
-        var mockDelegatingHandler = MockDelegatingHandler(HttpStatusCode.OK, new PagedResult<IEnumerable<JobDto>>()
+        var mockDelegatingHandler = MockHelpers.CreateDelegatingHandlerMock(HttpStatusCode.OK, new PagedResult<IEnumerable<JobDto>>()
         {
             Data = new List<JobDto>()
             {
@@ -25,7 +25,8 @@ public class HttpJobServiceTest
             NextPageToken = string.Empty,
             TotalSize = 1
         });
-        var httpJobService = CreateMockedService(mockDelegatingHandler);
+        var mockHttpClient = MockHelpers.CreateHttpClientMock(mockDelegatingHandler);
+        var httpJobService = new HttpJobService(mockHttpClient);
         
         // Act
         var apiResponse = await httpJobService.GetJobsAsync();
@@ -52,9 +53,10 @@ public class HttpJobServiceTest
     public async Task GetJobsAsync_Exception()
     {
         // Arrange
-        var mockDelegatingHandler = MockDelegatingHandler(HttpStatusCode.BadRequest, new {});
-        var httpJobService = CreateMockedService(mockDelegatingHandler);
-
+        var mockDelegatingHandler = MockHelpers.CreateDelegatingHandlerMock(HttpStatusCode.BadRequest, new {});
+        var mockHttpClient = MockHelpers.CreateHttpClientMock(mockDelegatingHandler);
+        var httpJobService = new HttpJobService(mockHttpClient);
+        
         // Assert
         await Assert.ThrowsAsync<HttpRequestException>(async () => await httpJobService.GetJobsAsync());
 
@@ -72,8 +74,9 @@ public class HttpJobServiceTest
     {
         // Arrange
         var testJobDto = GetJobDto();
-        var mockDelegatingHandler = MockDelegatingHandler(HttpStatusCode.OK, testJobDto);
-        var httpJobService = CreateMockedService(mockDelegatingHandler);
+        var mockDelegatingHandler = MockHelpers.CreateDelegatingHandlerMock(HttpStatusCode.OK, testJobDto);
+        var mockHttpClient = MockHelpers.CreateHttpClientMock(mockDelegatingHandler);
+        var httpJobService = new HttpJobService(mockHttpClient);
         
         //Act
         var jobDto = await httpJobService.GetJobAsync(1);
@@ -96,8 +99,9 @@ public class HttpJobServiceTest
     public async Task GetJobAsync_Exception()
     {
         // Arrange
-        var mockDelegatingHandler = MockDelegatingHandler(HttpStatusCode.BadRequest, new {});
-        var httpJobService = CreateMockedService(mockDelegatingHandler);
+        var mockDelegatingHandler = MockHelpers.CreateDelegatingHandlerMock(HttpStatusCode.BadRequest, new {});
+        var mockHttpClient = MockHelpers.CreateHttpClientMock(mockDelegatingHandler);
+        var httpJobService = new HttpJobService(mockHttpClient);
         
         // Assert
         await Assert.ThrowsAsync<HttpRequestException>(async () => await httpJobService.GetJobAsync(1));
@@ -130,28 +134,5 @@ public class HttpJobServiceTest
                 Name = "Test"
             }
         };
-    }
-
-    private static Mock<DelegatingHandler> MockDelegatingHandler<T>(HttpStatusCode statusCode, T content)
-    {
-        var mockDelegatingHandler = new Mock<DelegatingHandler>();
-        mockDelegatingHandler.Protected()
-            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
-                ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = statusCode,
-                Content = JsonContent.Create(content)
-            });
-        return mockDelegatingHandler;
-    }
-    
-    private static HttpJobService CreateMockedService(Mock<DelegatingHandler> mockDelegatingHandler)
-    {
-        var mockHttpClient = new HttpClient(mockDelegatingHandler.Object)
-        {
-            BaseAddress = new Uri("http://localhost")
-        };
-        return new HttpJobService(mockHttpClient);
     }
 }

@@ -15,6 +15,8 @@ service JobService {
   rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
   // A method used to get a job by its ID.
   rpc GetJob(GetJobRequest) returns (JobProto);
+  // A method used to update a job.
+  rpc UpdateJob(UpdateJobRequest) returns (JobProto);
 }
 
 // A request to be sent when calling the `CreateJob` method.
@@ -55,6 +57,14 @@ message ListJobsResponse {
 message GetJobRequest {
   // The id of the job to get.
   int64 id = 1;
+}
+
+// A request to be sent when calling the "UpdateJob" method.
+message UpdateJobRequest {
+  // The id of the job to update.
+  int64 id = 1;
+  // The job status, must be one of `Active`, `Closed`.
+  string status = 2;
 }
 
 // A representation of a `Job` resource.

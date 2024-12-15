@@ -19,7 +19,14 @@
                 <AuthorizeView>
                     <Authorized>
                         <li class="nav-item">
-                            <NavLink class="nav-link" href="/applications">Applications</NavLink>
+                            <NavLink class="nav-link" href="/profile/applications">Applications</NavLink>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Roles="JobProvider">
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="/profile/jobs">Your jobs</NavLink>
                         </li>
                     </Authorized>
                 </AuthorizeView>

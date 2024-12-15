@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 using Server.Grpc;
@@ -101,6 +101,32 @@ public class JobsController : ControllerBase
         });
 
         var jobDto = new JobDto()
+        {
+            Id = jobProto.Id,
+            Title = jobProto.Title,
+            Description = jobProto.Description,
+            PostingDate = jobProto.PostingDate.ToDateTimeOffset(),
+            Deadline = jobProto.Deadline.ToDateTimeOffset(),
+            Location = jobProto.Location,
+            Type = jobProto.Type,
+            Salary = jobProto.Salary,
+            Status = jobProto.Status,
+            JobProvider = UserMapper.ToDto(jobProto.JobProvider)
+        };
+
+        return Ok(jobDto);
+    }
+    
+    [HttpPut("{id:long}")]
+    public async Task<ActionResult<JobDto>> UpdateJobAsync([FromRoute] long id, UpdateJobDto updateJobDto)
+    {
+        var jobProto = await _jobServiceClient.UpdateJobAsync(new  UpdateJobRequest()
+        {
+            Id = id,
+            Status = updateJobDto.Status
+        });
+
+        var jobDto = new JobDto
         {
             Id = jobProto.Id,
             Title = jobProto.Title,

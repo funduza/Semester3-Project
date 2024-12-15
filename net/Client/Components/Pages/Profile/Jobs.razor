@@ -14,10 +14,14 @@
     }
     else
     {
-        @if (_paginationState.TotalItemCount.HasValue)
-        {
-            <h1 class="mb-3 fs-3">You have <strong>@_paginationState.TotalItemCount</strong> jobs</h1>
-        }
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            @if (_paginationState.TotalItemCount.HasValue)
+            {
+                <h1 class="fs-3">You have <strong>@_paginationState.TotalItemCount</strong> jobs</h1>
+            }
+            
+            <NavLink href="profile/jobs/create" class="btn btn-primary">Add new job</NavLink>
+        </div>
 
         <QuickGrid ItemsProvider="_jobsProvider" Pagination="_paginationState" Class="table table-bordered table-responsive table-striped">
             <PropertyColumn Property="@(job => job.Title)" Title="Job Title" />

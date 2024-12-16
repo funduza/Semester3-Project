@@ -60,7 +60,8 @@ public class ApiAuthProvider : AuthenticationStateProvider
         [
             new(ClaimTypes.NameIdentifier, $"{userDto.Id}"),
             new(ClaimTypes.Email, $"{userDto.Email}"),
-            new(ClaimTypes.Role, $"{userDto.Role}")
+            new(ClaimTypes.Role, $"{userDto.Role}"),
+            new(ClaimTypes.Name, $"{userDto.FirstName ?? userDto.Name}")
         ];
 
         var identity = new ClaimsIdentity(claims, "API authentication");

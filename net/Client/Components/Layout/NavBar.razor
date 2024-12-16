@@ -31,10 +31,13 @@
                     </Authorized>
                 </AuthorizeView>
             </ul>
-            <div class="d-flex gap-3 align-items-center">
+            <div class="d-flex gap-4 align-items-center">
                 <AuthorizeView>
                     <Authorized>
-                        <NavLink class="nav-link" href="/profile">@context.User.FindFirstValue(ClaimTypes.Email)</NavLink>
+                        <NavLink class="nav-link d-flex align-items-center gap-2" href="/profile">
+                            @context.User.FindFirstValue(ClaimTypes.Name)
+                            <i class="bi bi-person-circle fs-3"></i>
+                        </NavLink>
                         <button @onclick="async () => await ((ApiAuthProvider)AuthenticationStateProvider).LogoutAsync()" class="btn btn-outline-danger">Logout</button>
                     </Authorized>
                     <NotAuthorized>

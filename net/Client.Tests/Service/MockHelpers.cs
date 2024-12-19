@@ -6,9 +6,9 @@ using Moq.Protected;
 
 namespace Client.Tests.Service;
 
-public class MockHelpers
+internal static class MockHelpers
 {
-    public static Mock<DelegatingHandler> CreateDelegatingHandlerMock<T>(HttpStatusCode statusCode, T content)
+    internal static Mock<DelegatingHandler> CreateDelegatingHandlerMock<T>(HttpStatusCode statusCode, T content)
     {
         var mockDelegatingHandler = new Mock<DelegatingHandler>();
         mockDelegatingHandler.Protected()
@@ -22,7 +22,7 @@ public class MockHelpers
         return mockDelegatingHandler;
     }
     
-    public static HttpClient CreateHttpClientMock(Mock<DelegatingHandler> mockDelegatingHandler)
+    internal static HttpClient CreateHttpClientMock(Mock<DelegatingHandler> mockDelegatingHandler)
     {
         return new HttpClient(mockDelegatingHandler.Object)
         {
